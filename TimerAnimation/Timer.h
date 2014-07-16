@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  Timer.h
 //  TimerAnimation
 //
 //  Created by Gee, Kirby on 7/16/14.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface Timer : UIView
 
 @end

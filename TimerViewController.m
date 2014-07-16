@@ -7,8 +7,10 @@
 //
 
 #import "TimerViewController.h"
+#import "Timer.h"
 
 @interface TimerViewController ()
+@property (weak, nonatomic) IBOutlet Timer *timerView;
 
 @end
 
@@ -35,15 +37,37 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([touch view] == self.timerView) {
+        CGPoint locationInSuperView = [touch locationInView: self.view];
+        NSLog(@"touch in super view: %@\n", NSStringFromCGPoint(locationInSuperView));
+        
+        CGPoint locationInTimerView = [touch locationInView: self.timerView];
+        NSLog(@"touch in timer view: %@", NSStringFromCGPoint(locationInTimerView));
+        self.timerView.touchLocation = locationInTimerView;
+        [self.timerView prepareForTimeChange];
+    }
 }
-*/
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([touch view] == self.timerView) {
+        
+        CGPoint locationInTimerView = [touch locationInView: self.timerView];
+        //NSLog(@"touch in timer view: %@", NSStringFromCGPoint(locationInTimerView));
+        self.timerView.touchLocation = locationInTimerView;
+    }
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [[event allTouches] anyObject];
+    if ([touch view] == self.timerView) {
+        [self.timerView timeChangeEnded];
+    }
+}
 
 @end

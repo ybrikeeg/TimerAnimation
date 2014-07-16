@@ -10,4 +10,11 @@
 
 @interface Timer : UIView
 
+@property (nonatomic) BOOL isTouched;
+@property (nonatomic) CGPoint touchLocation;
+@property (nonatomic) int minutes;
+
+- (void)prepareForTimeChange;
+- (void)timeChangeEnded;
+
 @end

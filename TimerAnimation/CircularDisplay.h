@@ -1,5 +1,5 @@
 //
-//  Timer.h
+//  CircularDisplay.h
 //  TimerAnimation
 //
 //  Created by Gee, Kirby on 7/16/14.
@@ -7,16 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Timer.h"
 
-@interface Timer : UIView
+@interface CircularDisplay : UIView
 
-@property (nonatomic) BOOL isTouched;
-@property (nonatomic) CGPoint touchLocation;
-@property (nonatomic) int minutes;
+- (id)initWithFrame:(CGRect)frame andSuperview:(Timer*)timerView;
 
 - (void)prepareForTimeChange;
 - (void)timeChangeEnded;
-
-+(UIColor*)colorWithHexString:(NSString*)hex;
+- (void)updateTimeLabel:(int)minutes;
 
 @end

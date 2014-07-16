@@ -10,7 +10,7 @@
 #import "Timer.h"
 
 @interface TimerViewController ()
-@property (weak, nonatomic) IBOutlet Timer *timerView;
+@property (strong, nonatomic) Timer *timerView;
 
 @end
 
@@ -28,6 +28,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2)];
+    [self.view addSubview:self.timerView];
     // Do any additional setup after loading the view.
 }
 

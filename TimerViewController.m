@@ -11,7 +11,7 @@
 #import "TTTimerControl.h"
 
 @interface TimerViewController ()
-//@property (strong, nonatomic) Timer *timerView;
+@property (strong, nonatomic) Timer *timerView;
 @property (nonatomic, strong) TTTimerControl *timerControl;
 
 @end
@@ -31,63 +31,22 @@
 {
     [super viewDidLoad];
 
+    //slide vertically
+    self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, 100, self.view.bounds.size.width, self.view.bounds.size.height/2)];
+    [self.view addSubview:self.timerView];
+    
+    
+    
+    //slide horizontally
     self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     [self.view addSubview:self.timerControl];
-    /*
-    self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2)];
-    [self.view addSubview:self.timerView];
-     */
+     
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    
-    /*
-     UITouch *touch = [[event allTouches] anyObject];
-
-    if ([touch view] == self.timerView) {
-        CGPoint locationInSuperView = [touch locationInView: self.view];
-        NSLog(@"touch in super view: %@\n", NSStringFromCGPoint(locationInSuperView));
-        
-        CGPoint locationInTimerView = [touch locationInView: self.timerView];
-        NSLog(@"touch in timer view: %@", NSStringFromCGPoint(locationInTimerView));
-        self.timerView.touchLocation = locationInTimerView;
-        [self.timerView prepareForTimeChange];
-    }
-     */
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-
-    /*
-     UITouch *touch = [[event allTouches] anyObject];
-
-    if ([touch view] == self.timerView) {
-        
-        CGPoint locationInTimerView = [touch locationInView: self.timerView];
-        //NSLog(@"touch in timer view: %@", NSStringFromCGPoint(locationInTimerView));
-        self.timerView.touchLocation = locationInTimerView;
-    }
-     */
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-
-    /*
-     UITouch *touch = [[event allTouches] anyObject];
-
-    if ([touch view] == self.timerView) {
-        [self.timerView timeChangeEnded];
-    }
-     */
 }
 
 @end

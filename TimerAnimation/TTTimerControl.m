@@ -12,14 +12,13 @@
 
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic) CGPoint touchLocation;
-
 @end
 
 @implementation TTTimerControl
 
 #define MAX_MINUTES 1440
 #define MIN_MINUTES 0
-#define LABEL_ANIMATE_DISTANCE 70
+#define LABEL_ANIMATE_DISTANCE 65
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -27,17 +26,28 @@
         // Initialization code
         self.backgroundColor = [TTTimerControl colorWithHexString:@"556270"];
 
-        self.minutes = 0;
-        self.touchLocation = CGPointZero;
 
         self.timeLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        self.timeLabel.text = @"00:00";
+        self.timeLabel.font = [UIFont fontWithName:@"Verdana" size:54.0f];
+        self.timeLabel.textAlignment = NSTextAlignmentCenter;
+        self.timeLabel.textColor = [TTTimerControl colorWithHexString:@"4ECEC4"];
+        self.timeLabel.backgroundColor = [TTTimerControl colorWithHexString:@"556270"];
+        [self.timeLabel sizeToFit];
         self.timeLabel.text = @"0:00";
-        self.timeLabel.font = [UIFont fontWithName:@"Verdana" size:32.0f];
-        self.timeLabel.textAlignment = NSTextAlignmentRight;
+
+        self.timeLabel.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+        CGRect bounds = self.timeLabel.bounds;
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(15.0, 15.0)];
+    
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.timeLabel.layer.mask = maskLayer;
         [self addSubview:self.timeLabel];
         
-        
-        
+        self.minutes = 0;
+        self.touchLocation = CGPointZero;
     }
     return self;
 }
@@ -63,15 +73,16 @@
     self.timeLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
 }
 
+
 - (void)animateLabelWithDistance:(int)dist
 {
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDelegate:self];
-    [UIView setAnimationDuration:0.1];
+    [UIView setAnimationDuration:0.15];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    self.timeLabel.center = CGPointMake(self.timeLabel.center.x, self.timeLabel.center.y + dist);
+    self.timeLabel.center = CGPointMake(160, self.timeLabel.center.y + dist);
     
     [UIView commitAnimations];
 }
@@ -109,20 +120,34 @@
     dx = (velo > -1 && velo < 1) ? (velo > 0) ? 1 : -1 : velo;//if velo is between -1 and 1, set it to -1 or 1, depending on sign
     self.minutes += dx;
     
-    NSLog(@"Diference: %f", dx);
-    
+    //NSLog(@"Diference: %f", dx);
     self.touchLocation = [touch locationInView:self];
-
 }
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(context, [TTTimerControl colorWithHexString:@"F2B134"].CGColor);
+    CGContextSetLineWidth(context, 5);
+    
+    
+    CGContextMoveToPoint(context, self.bounds.origin.x, self.bounds.origin.y);
+    NSLog(@"Point: %@", NSStringFromCGPoint(self.bounds.origin));
+    
+    CGContextAddLineToPoint(context, self.bounds.size.width/2 -  self.timeLabel.bounds.size.width/2, self.bounds.origin.y);
+    NSLog(@"Point: %@", NSStringFromCGPoint(CGPointMake(self.bounds.size.width/2 -  self.timeLabel.bounds.size.width/2, self.bounds.origin.y)));
+    
+    CGContextAddLineToPoint(context, self.bounds.size.width/2 -  self.timeLabel.bounds.size.width/2, LABEL_ANIMATE_DISTANCE);
+    NSLog(@"Point: %@", NSStringFromCGPoint(CGPointMake(self.bounds.size.width/2 -  self.timeLabel.bounds.size.width/2, LABEL_ANIMATE_DISTANCE)));
+
+    CGContextClosePath(context);
+    CGContextStrokePath(context);
 }
 */
-
 
 +(UIColor*)colorWithHexString:(NSString*)hex //found online at http://stackoverflow.com/questions/6207329/how-to-set-hex-color-code-for-background
 {

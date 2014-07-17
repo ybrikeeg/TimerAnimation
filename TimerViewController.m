@@ -11,7 +11,8 @@
 #import "TTTimerControl.h"
 
 @interface TimerViewController ()
-@property (strong, nonatomic) Timer *timerView;
+//@property (strong, nonatomic) Timer *timerView;
+@property (nonatomic, strong) TTTimerControl *timerControl;
 
 @end
 
@@ -30,7 +31,8 @@
 {
     [super viewDidLoad];
 
-    
+    self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
+    [self.view addSubview:self.timerControl];
     /*
     self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height/2, self.view.bounds.size.width, self.view.bounds.size.height/2)];
     [self.view addSubview:self.timerView];
@@ -45,9 +47,10 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [[event allTouches] anyObject];
     
     /*
+     UITouch *touch = [[event allTouches] anyObject];
+
     if ([touch view] == self.timerView) {
         CGPoint locationInSuperView = [touch locationInView: self.view];
         NSLog(@"touch in super view: %@\n", NSStringFromCGPoint(locationInSuperView));
@@ -62,9 +65,10 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [[event allTouches] anyObject];
-    
+
     /*
+     UITouch *touch = [[event allTouches] anyObject];
+
     if ([touch view] == self.timerView) {
         
         CGPoint locationInTimerView = [touch locationInView: self.timerView];
@@ -76,9 +80,10 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [[event allTouches] anyObject];
-    
+
     /*
+     UITouch *touch = [[event allTouches] anyObject];
+
     if ([touch view] == self.timerView) {
         [self.timerView timeChangeEnded];
     }

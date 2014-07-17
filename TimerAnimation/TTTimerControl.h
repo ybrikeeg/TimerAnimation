@@ -10,4 +10,5 @@
 
 @interface TTTimerControl : UIView
 
+@property (nonatomic) int minutes;
 @end

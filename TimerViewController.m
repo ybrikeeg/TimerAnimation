@@ -9,10 +9,13 @@
 #import "TimerViewController.h"
 #import "Timer.h"
 #import "TTTimerControl.h"
+#import "ScrollTimerView.h"
+#import "ContainerView.h"
 
 @interface TimerViewController ()
 @property (strong, nonatomic) Timer *timerView;
 @property (nonatomic, strong) TTTimerControl *timerControl;
+@property (nonatomic, strong) ContainerView *container;
 @property(nonatomic, retain) NSDate *databaseDate;
 @end
 
@@ -33,13 +36,17 @@
     
     //slide vertically
     self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, 100, self.view.bounds.size.width, self.view.bounds.size.height/2)];
-    [self.view addSubview:self.timerView];
+    //[self.view addSubview:self.timerView];
     
     
     
     //slide horizontally
     self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
-    [self.view addSubview:self.timerControl];
+    //[self.view addSubview:self.timerControl];
+    
+    
+    self.container = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
+    [self.view addSubview:self.container];
     
     NSLog(@"views laoded");
     

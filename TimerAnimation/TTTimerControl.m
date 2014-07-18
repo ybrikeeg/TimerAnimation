@@ -53,8 +53,6 @@
         self.touchLocation = CGPointZero;
         self.timerStarted = NO;
         self.mainTimer = nil;
-        //_mainTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
-
     
     }
     return self;
@@ -66,48 +64,29 @@
     int hour = elapsedTime / 3600;
     int min = (elapsedTime % 3600) / 60;
     int sec = elapsedTime % 60;
-    NSLog(@"string: %@", [NSString stringWithFormat:@"%02d:%02d:%02d", hour, min, sec]);
     return [NSString stringWithFormat:@"%02d:%02d:%02d", hour, min, sec];
 }
 - (void)updateTimer:(NSTimer *)timer
 {
-    NSLog(@"time since: %d", (int)[self.startDate timeIntervalSinceNow] * -1);
     self.timeLabel.text = [self convertDatetoString];
 
 }
 - (void)stopTiming
 {
-    NSLog(@"Stopping timer");
     self.timerStarted = NO;
     [self.mainTimer invalidate];
 }
 
 - (void)startTiming
 {
-    NSLog(@"Starting timer");
 
     self.timerStarted = YES;
     self.startDate = [NSDate date];
-    _mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
-    
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd"];
-    
-    NSDateFormatter *timeFormat = [[NSDateFormatter alloc] init];
-    [timeFormat setDateFormat:@"HH:mm:ss"];
-    
-    
-    NSString *theDate = [dateFormat stringFromDate:self.startDate];
-    NSString *theTime = [timeFormat stringFromDate:self.startDate];
-    NSLog(@"thedate: %@", theDate);
-    NSLog(@"thetime: %@\n", theTime);
-    
+    self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+
+
     self.startDate = [self.startDate dateByAddingTimeInterval:-self.minutes * 60];
-    
-    NSString *theDate2 = [dateFormat stringFromDate:self.startDate];
-    NSString *theTime2 = [timeFormat stringFromDate:self.startDate];
-    NSLog(@"thedate: %@", theDate2);
-    NSLog(@"thetime: %@\n\n\n", theTime2);
+
 }
 - (NSString *)convertMinutesToHoursInStringFormat:(int)minutes
 {

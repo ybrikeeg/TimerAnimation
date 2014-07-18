@@ -52,11 +52,38 @@
     return self;
 }
 
+- (void)startTiming
+{
+    self.startDate = [NSDate date];
+    //NSLog(@"Button start time: %@", self.startDate);
+
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd"];
+    
+    NSDateFormatter *timeFormat = [[NSDateFormatter alloc] init];
+    [timeFormat setDateFormat:@"HH:mm:ss"];
+    
+    
+    NSString *theDate = [dateFormat stringFromDate:self.startDate];
+    NSString *theTime = [timeFormat stringFromDate:self.startDate];
+    NSLog(@"thedate: %@", theDate);
+    NSLog(@"thetime: %@\n", theTime);
+    
+    self.startDate = [self.startDate dateByAddingTimeInterval:-self.minutes * 60];
+
+    NSString *theDate2 = [dateFormat stringFromDate:self.startDate];
+    NSString *theTime2 = [timeFormat stringFromDate:self.startDate];
+    NSLog(@"thedate: %@", theDate2);
+    NSLog(@"thetime: %@\n\n\n", theTime2);
+    //NSLog(@"Actual start time: %@", self.startDate);
+}
 - (NSString *)convertMinutesToHoursInStringFormat:(int)minutes
 {
     int hours = minutes / 60;
     int min = ((minutes % 60) / 15) * 15;
     
+    _minutes = hours * 60 + min;
     return [NSString stringWithFormat:@"%d:%02d", hours, min];
 }
 
@@ -122,6 +149,8 @@
     
     //NSLog(@"Diference: %f", dx);
     self.touchLocation = [touch locationInView:self];
+    
+    //NSLog(@"mins: %d", self.minutes);
 }
 
 /*

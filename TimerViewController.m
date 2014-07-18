@@ -13,7 +13,7 @@
 @interface TimerViewController ()
 @property (strong, nonatomic) Timer *timerView;
 @property (nonatomic, strong) TTTimerControl *timerControl;
-
+@property(nonatomic, retain) NSDate *databaseDate;
 @end
 
 @implementation TimerViewController
@@ -30,7 +30,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     //slide vertically
     self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, 100, self.view.bounds.size.width, self.view.bounds.size.height/2)];
     [self.view addSubview:self.timerView];
@@ -40,9 +40,24 @@
     //slide horizontally
     self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     [self.view addSubview:self.timerControl];
-     
+    
+    
+    //self.databaseDate = [NSDate date];
+    
+}
+- (IBAction)startTimer:(id)sender {
+    [self.timerControl startTiming];
+}
+- (IBAction)stopTimer:(id)sender {
+    
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    //NSTimeInterval remainingSec = [self.databaseDate timeIntervalSinceNow];
+    //NSLog(@"Interval: %f", remainingSec);
+    
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

@@ -43,7 +43,6 @@
 
 - (void)targetMethod:(NSTimer *)timer
 {
-    NSLog(@"pulse");
     CABasicAnimation *theAnimation;
     
     theAnimation=[CABasicAnimation animationWithKeyPath:@"opacity"];

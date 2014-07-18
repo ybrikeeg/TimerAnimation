@@ -11,4 +11,8 @@
 @interface TTTimerControl : UIView
 
 @property (nonatomic) int minutes;
+@property (nonatomic, strong) NSDate *startDate;
+
+- (void)startTiming;
+
 @end

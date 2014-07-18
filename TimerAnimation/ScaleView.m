@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor purpleColor];
         self.trianglePoint = CGPointMake(CORNER_OFFSET, CORNER_OFFSET);
     }
     return self;
@@ -53,7 +53,8 @@
     CGContextSetLineDash(context, 0, dashArray, 0);
     CGContextSetLineWidth(context, 2.0);
     
-    CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+    //CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+    CGContextStrokePath(context);
     CGContextDrawPath(context, kCGPathFillStroke);
     
     

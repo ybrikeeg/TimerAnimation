@@ -10,4 +10,5 @@
 
 @interface ContainerView : UIView
 
+@property (nonatomic) int minutes;
 @end

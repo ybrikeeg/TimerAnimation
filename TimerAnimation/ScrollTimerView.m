@@ -20,6 +20,11 @@
         // Initialization code
         self.backgroundColor = [UIColor redColor];
         
+        self.timerLabel = [[UILabel alloc] initWithFrame:frame];
+        self.timerLabel.text = @"00:00";
+        self.timerLabel.font = [UIFont fontWithName:@"Verdana" size:20.0f];
+        self.timerLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:self.timerLabel];
     }
     return self;
 }

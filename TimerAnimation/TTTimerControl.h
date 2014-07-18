@@ -14,5 +14,6 @@
 @property (nonatomic, strong) NSDate *startDate;
 
 - (void)startTiming;
+- (void)stopTiming;
 
 @end

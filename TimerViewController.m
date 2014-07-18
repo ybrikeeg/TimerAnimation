@@ -41,15 +41,20 @@
     self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     [self.view addSubview:self.timerControl];
     
-    
-    //self.databaseDate = [NSDate date];
+    NSLog(@"views laoded");
     
 }
+
+
+
+
+
 - (IBAction)startTimer:(id)sender {
     [self.timerControl startTiming];
 }
 - (IBAction)stopTimer:(id)sender {
-    
+ 
+    [self.timerControl stopTiming];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

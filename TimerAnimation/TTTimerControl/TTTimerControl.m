@@ -45,6 +45,9 @@
 
 - (void)stopTiming
 {
+    int elapsedTime = (int)([self.startDate timeIntervalSinceNow] * -1);
+    NSLog(@"elapsed time in mins: %d", elapsedTime/60);
+    _minutes = elapsedTime/60;
     self.timerStarted = NO;
     [self.mainTimer invalidate];
     self.scroll.timerLabel.text = @"0 hrs 0 mins";
@@ -70,10 +73,12 @@
     self.startDate = [NSDate date];
     self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
     
+    //round minutes to nearest multiple of 15
     int hours = self.minutes / 60;
     int min = ((self.minutes % 60) / 15) * 15;
     
     int tempMin = hours * 60 + min;
+    self.minutes = tempMin;
     self.startDate = [self.startDate dateByAddingTimeInterval:-tempMin * 60];
 }
 
@@ -96,13 +101,14 @@
     _minutes = minutes;
     
     self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
+    
+    //triangle moves based on minutes
     self.scale.trianglePoint = CGPointMake((self.bounds.size.width - 2*CORNER_OFFSET) * (_minutes / (float)MAX_MINUTES) + CORNER_OFFSET, CORNER_OFFSET);
 }
 
 - (void)moveScaleView:(int)dist
 {
     //move scale view up top
-    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDelegate:self];
@@ -111,7 +117,6 @@
     
     self.scale.frame = CGRectMake(0, self.scale.bounds.origin.y - dist, self.bounds.size.width, self.bounds.size.height);
     self.scroll.timerLabel.frame = CGRectMake(0, self.scroll.timerLabel.bounds.origin.y - dist * 0.90, self.bounds.size.width, self.bounds.size.height);
-    //self.scroll.helperLabel.frame = CGRectMake(0, self.scroll.helperLabel.bounds.size.height * .40 - dist * 0.90, self.bounds.size.width, self.bounds.size.height);
     
     [UIView commitAnimations];
 }

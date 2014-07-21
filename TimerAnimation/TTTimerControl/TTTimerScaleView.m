@@ -11,6 +11,8 @@
 #import "Constants.h"
 
 @interface TTTimerScaleView ()
+@property (nonatomic, strong) UILabel *fixedTimeLabel;
+@property (nonatomic, strong) UILabel *slidingTimeLabel;
 @end
 
 @implementation TTTimerScaleView
@@ -22,6 +24,16 @@
         // Initialization code
         self.backgroundColor = [TTTimerControl colorWithHexString:@"4DAAAB"];
         
+        self.fixedTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0, 60, 20)];
+        //self.fixedTimeLabel.backgroundColor = [UIColor redColor];
+        //self.fixedTimeLabel.alpha = 0.5f;
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+        [dateFormatter setDateFormat:@"h:m a"];
+        self.fixedTimeLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        self.fixedTimeLabel.textAlignment = NSTextAlignmentRight;
+        [self addSubview:self.fixedTimeLabel];
+        [self.fixedTimeLabel sizeToFit];
+        self.fixedTimeLabel.frame = CGRectMake(self.bounds.size.width - self.fixedTimeLabel.bounds.size.width, 0, self.fixedTimeLabel.bounds.size.width, self.fixedTimeLabel.bounds.size.height);
         self.trianglePoint = CGPointMake(CORNER_OFFSET, CORNER_OFFSET);
     }
     return self;

@@ -45,12 +45,12 @@
     self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     //[self.view addSubview:self.timerControl];
     
-    self.containerNoVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 240, self.view.bounds.size.width, 80) usingVelocity:NO];
+    self.containerNoVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity:NO];
     [self.view addSubview:self.containerNoVelo];
     
     
     self.containerVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity: YES];
-    [self.view addSubview:self.containerVelo];
+    //[self.view addSubview:self.containerVelo];
     
     NSLog(@"views laoded");
     
@@ -61,11 +61,11 @@
 
 
 - (IBAction)startTimer:(id)sender {
-    [self.timerControl startTiming];
+    [self.containerNoVelo startTiming];
 }
 - (IBAction)stopTimer:(id)sender {
  
-    [self.timerControl stopTiming];
+    [self.containerNoVelo stopTiming];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

@@ -11,9 +11,13 @@
 @interface ContainerView : UIView
 
 @property (nonatomic) int minutes;
+@property (nonatomic, strong) NSDate *startDate;
 
 +(UIColor*)colorWithHexString:(NSString*)hex;
 
 - (id)initWithFrame:(CGRect)frame usingVelocity:(BOOL)isVelo;
+- (void)startTiming;
+- (void)stopTiming;
+
 
 @end

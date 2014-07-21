@@ -10,5 +10,4 @@
 
 @interface ScrollTimerView : UIView
 @property (nonatomic, strong) UILabel *timerLabel;
-
 @end

@@ -53,6 +53,7 @@
     CGContextStrokePath(context);
     
     //draws the tick marks
+    
     for (int i = 1; i < 4; i++){
         CGContextMoveToPoint(context, CORNER_OFFSET + i * (self.bounds.size.width - 2*CORNER_OFFSET) / 4, CORNER_OFFSET);
         CGContextAddLineToPoint(context, CORNER_OFFSET + i * (self.bounds.size.width - 2*CORNER_OFFSET) / 4, CORNER_OFFSET + 5);

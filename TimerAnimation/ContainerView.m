@@ -16,6 +16,8 @@
 @property (nonatomic, strong) ScrollTimerView *scroll;
 @property (nonatomic) CGPoint touchLocation;
 @property (nonatomic) BOOL useVelocity;
+@property (nonatomic) BOOL timerStarted;
+@property (nonatomic, strong) NSTimer *mainTimer;
 
 @end
 
@@ -34,22 +36,52 @@
         
         self.scale = [[ScaleView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scale];
-
+        
         
         [self sendSubviewToBack:self.scale];
-    
+        
     }
     return self;
+}
+
+- (void)stopTiming
+{
+    self.timerStarted = NO;
+    [self.mainTimer invalidate];
+}
+
+- (NSString *)convertDatetoString
+{
+    int elapsedTime = (int)([self.startDate timeIntervalSinceNow] * -1);
+    int hour = elapsedTime / 3600;
+    int min = (elapsedTime % 3600) / 60;
+    int sec = elapsedTime % 60;
+    return [NSString stringWithFormat:@"%d:%02d:%02d", hour, min, sec];
+}
+
+- (void)updateTimer:(NSTimer *)timer
+{
+    self.scroll.timerLabel.text = [self convertDatetoString];
+}
+
+- (void)startTiming
+{
+    self.timerStarted = YES;
+    self.startDate = [NSDate date];
+    self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+    
+    int hours = self.minutes / 60;
+    int min = ((self.minutes % 60) / 15) * 15;
+    
+    int tempMin = hours * 60 + min;
+    self.startDate = [self.startDate dateByAddingTimeInterval:-tempMin * 60];
 }
 
 - (NSString *)convertMinutesToHoursInStringFormat:(int)minutes
 {
     int hours = minutes / 60;
     int min = ((minutes % 60) / 15) * 15;
-    
-    //int tempMin = hours * 60 + min;
-   
-    return [NSString stringWithFormat:@"%d:%02d", hours, min];
+    return [NSString stringWithFormat:@"%d hrs %02d mins", hours, min];
 }
 
 - (void)setMinutes:(int)minutes
@@ -62,7 +94,7 @@
     }
     
     _minutes = minutes;
-
+    
     self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
     self.scale.trianglePoint = CGPointMake((self.bounds.size.width - 2*CORNER_OFFSET) * (_minutes / (float)MAX_MINUTES) + CORNER_OFFSET, CORNER_OFFSET);
 }
@@ -79,51 +111,60 @@
     
     self.scale.frame = CGRectMake(0, self.scale.bounds.origin.y - dist, self.bounds.size.width, self.bounds.size.height);
     self.scroll.timerLabel.frame = CGRectMake(0, self.scroll.timerLabel.bounds.origin.y - dist * 0.90, self.bounds.size.width, self.bounds.size.height);
-
+    //self.scroll.helperLabel.frame = CGRectMake(0, self.scroll.helperLabel.bounds.size.height * .40 - dist * 0.90, self.bounds.size.width, self.bounds.size.height);
+    
     [UIView commitAnimations];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [[event allTouches] anyObject];
-    self.touchLocation = [touch locationInView:self];
-    
-    if (!self.useVelocity){
-        self.minutes = ([touch locationInView:self].x - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
+    if (!self.timerStarted){
+        UITouch *touch = [[event allTouches] anyObject];
+        self.touchLocation = [touch locationInView:self];
+        
+        if (!self.useVelocity){
+            self.minutes = ([touch locationInView:self].x - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
+        }
+        
+        [self moveScaleView:80];
     }
-    [self moveScaleView:80];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [self moveScaleView:0];
+    if (!self.timerStarted){
+        [self moveScaleView:0];
+    }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
-    [self moveScaleView:0];
+    if (!self.timerStarted){
+        [self moveScaleView:0];
+    }
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    UITouch *touch = [[event allTouches] anyObject];
-    //self.scale.trianglePoint = [touch locationInView:self];
-    
-    if (self.useVelocity){
-        float dx = [touch locationInView:self].x - self.touchLocation.x;//difference in pts between last touch and current touch
+    if (!self.timerStarted){
+        UITouch *touch = [[event allTouches] anyObject];
+        //self.scale.trianglePoint = [touch locationInView:self];
         
-        float velo = (fabsf(dx) / 2) * dx;//formula to account for velocity of the swipe **subject to change**
-        
-        //checks for lower and upper bounds for velo
-        dx = (velo > -MIN_MINUTE_DX && velo < MIN_MINUTE_DX) ? (velo > 0) ? MIN_MINUTE_DX : -MIN_MINUTE_DX : velo;//if velo is between -1 and 1, set it to -1 or 1, depending on sign
-        dx = (dx > MAX_MINUTE_DX) ? MAX_MINUTE_DX : dx;
-        dx = (dx < -MAX_MINUTE_DX) ? -MAX_MINUTE_DX : dx;
-        
-        self.minutes += dx;
-        //NSLog(@"Dx: %f", dx);
-        self.touchLocation = [touch locationInView:self];
-    } else if (!self.useVelocity){
-        self.minutes = ([touch locationInView:self].x - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
+        if (self.useVelocity){
+            float dx = [touch locationInView:self].x - self.touchLocation.x;//difference in pts between last touch and current touch
+            
+            float velo = (fabsf(dx) / 2) * dx;//formula to account for velocity of the swipe **subject to change**
+            
+            //checks for lower and upper bounds for velo
+            dx = (velo > -MIN_MINUTE_DX && velo < MIN_MINUTE_DX) ? (velo > 0) ? MIN_MINUTE_DX : -MIN_MINUTE_DX : velo;//if velo is between -1 and 1, set it to -1 or 1, depending on sign
+            dx = (dx > MAX_MINUTE_DX) ? MAX_MINUTE_DX : dx;
+            dx = (dx < -MAX_MINUTE_DX) ? -MAX_MINUTE_DX : dx;
+            
+            self.minutes += dx;
+            //NSLog(@"Dx: %f", dx);
+            self.touchLocation = [touch locationInView:self];
+        } else if (!self.useVelocity){
+            self.minutes = ([touch locationInView:self].x - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
+        }
     }
     
 }
@@ -158,10 +199,6 @@
     [[NSScanner scannerWithString:gString] scanHexInt:&g];
     [[NSScanner scannerWithString:bString] scanHexInt:&b];
     
-    return [UIColor colorWithRed:((float) r / 255.0f)
-                           green:((float) g / 255.0f)
-                            blue:((float) b / 255.0f)
-                           alpha:1.0f];
-    
+    return [UIColor colorWithRed:((float) r / 255.0f) green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:1.0f];
 }
 @end

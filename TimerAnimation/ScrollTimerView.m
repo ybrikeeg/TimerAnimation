@@ -8,6 +8,7 @@
 
 #import "ScrollTimerView.h"
 #import "ScaleView.h"
+#import "ContainerView.h"
 
 @interface ScrollTimerView ()
 @end
@@ -18,25 +19,16 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor redColor];
+        self.backgroundColor = [ContainerView colorWithHexString:@"1E4F6A"];
         
         self.timerLabel = [[UILabel alloc] initWithFrame:frame];
         self.timerLabel.text = @"00:00";
-        self.timerLabel.font = [UIFont fontWithName:@"Verdana" size:20.0f];
+        self.timerLabel.font = [UIFont fontWithName:@"Verdana" size:48.0f];
+        self.timerLabel.textColor = [ContainerView colorWithHexString:@"CDDEC6"];
         self.timerLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.timerLabel];
     }
     return self;
 }
-
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

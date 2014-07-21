@@ -69,6 +69,7 @@
 		699CEA7F197711DF0099BE6F /* TimerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimerViewController.m; path = ../TimerViewController.m; sourceTree = "<group>"; };
 		699CEA81197725420099BE6F /* CircularDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircularDisplay.h; sourceTree = "<group>"; };
 		699CEA82197725420099BE6F /* CircularDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircularDisplay.m; sourceTree = "<group>"; };
+		69C6B326197D7F99009334CF /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		69CFC74319786D8F002C6B3C /* TTTimerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerControl.h; sourceTree = "<group>"; };
 		69CFC74419786D8F002C6B3C /* TTTimerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerControl.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +101,7 @@
 		691F4AD21979D3A900FF0BB6 /* Group3 */ = {
 			isa = PBXGroup;
 			children = (
+				69C6B326197D7F99009334CF /* Constants.h */,
 				691F4ACF1979D3A200FF0BB6 /* ContainerView.h */,
 				691F4AD01979D3A200FF0BB6 /* ContainerView.m */,
 				691F4AC91979D1FF00FF0BB6 /* ScrollTimerView.h */,

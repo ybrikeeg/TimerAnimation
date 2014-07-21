@@ -11,4 +11,9 @@
 @interface ContainerView : UIView
 
 @property (nonatomic) int minutes;
+
++(UIColor*)colorWithHexString:(NSString*)hex;
+
+- (id)initWithFrame:(CGRect)frame usingVelocity:(BOOL)isVelo;
+
 @end

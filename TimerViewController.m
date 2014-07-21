@@ -15,7 +15,8 @@
 @interface TimerViewController ()
 @property (strong, nonatomic) Timer *timerView;
 @property (nonatomic, strong) TTTimerControl *timerControl;
-@property (nonatomic, strong) ContainerView *container;
+@property (nonatomic, strong) ContainerView *containerVelo;
+@property (nonatomic, strong) ContainerView *containerNoVelo;
 @property(nonatomic, retain) NSDate *databaseDate;
 @end
 
@@ -44,9 +45,12 @@
     self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     //[self.view addSubview:self.timerControl];
     
+    self.containerNoVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 240, self.view.bounds.size.width, 80) usingVelocity:NO];
+    [self.view addSubview:self.containerNoVelo];
     
-    self.container = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
-    [self.view addSubview:self.container];
+    
+    self.containerVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity: YES];
+    [self.view addSubview:self.containerVelo];
     
     NSLog(@"views laoded");
     

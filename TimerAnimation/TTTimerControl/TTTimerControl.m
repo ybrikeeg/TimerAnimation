@@ -6,22 +6,21 @@
 //  Copyright (c) 2014 Kirby Gee - Stanford. All rights reserved.
 //
 
-#import "ContainerView.h"
-#import "ScaleView.h"
-#import "ScrollTimerView.h"
+#import "TTTimerControl.h"
+#import "TTTimerScaleView.h"
+#import "TTTimerHorizontalScrollView.h"
 #import "Constants.h"
 
-@interface ContainerView ()
-@property (nonatomic, strong) ScaleView *scale;
-@property (nonatomic, strong) ScrollTimerView *scroll;
+@interface TTTimerControl ()
+@property (nonatomic, strong) TTTimerScaleView *scale;
+@property (nonatomic, strong) TTTimerHorizontalScrollView *scroll;
 @property (nonatomic) CGPoint touchLocation;
 @property (nonatomic) BOOL useVelocity;
-@property (nonatomic) BOOL timerStarted;
 @property (nonatomic, strong) NSTimer *mainTimer;
 
 @end
 
-@implementation ContainerView
+@implementation TTTimerControl
 
 
 - (id)initWithFrame:(CGRect)frame usingVelocity:(BOOL)isVelo
@@ -31,10 +30,10 @@
         
         self.useVelocity = isVelo;
         
-        self.scroll = [[ScrollTimerView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+        self.scroll = [[TTTimerHorizontalScrollView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scroll];
         
-        self.scale = [[ScaleView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+        self.scale = [[TTTimerScaleView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scale];
         
         
@@ -48,6 +47,7 @@
 {
     self.timerStarted = NO;
     [self.mainTimer invalidate];
+    self.scroll.timerLabel.text = @"0 hrs 0 mins";
 }
 
 - (NSString *)convertDatetoString

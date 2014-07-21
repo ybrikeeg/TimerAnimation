@@ -6,21 +6,21 @@
 //  Copyright (c) 2014 Kirby Gee - Stanford. All rights reserved.
 //
 
-#import "ScaleView.h"
-#import "ContainerView.h"
+#import "TTTimerScaleView.h"
+#import "TTTimerControl.h"
 #import "Constants.h"
 
-@interface ScaleView ()
+@interface TTTimerScaleView ()
 @end
 
-@implementation ScaleView
+@implementation TTTimerScaleView
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [ContainerView colorWithHexString:@"4DAAAB"];
+        self.backgroundColor = [TTTimerControl colorWithHexString:@"4DAAAB"];
         
         self.trianglePoint = CGPointMake(CORNER_OFFSET, CORNER_OFFSET);
     }
@@ -49,7 +49,7 @@
     CGContextAddLineToPoint(context, self.bounds.size.width - CORNER_OFFSET, START_OFFSET);
 
     CGContextSetLineWidth(context, 2.0);
-    CGContextSetStrokeColorWithColor(context, [ContainerView colorWithHexString:@"1E4F6A"].CGColor);
+    CGContextSetStrokeColorWithColor(context, [TTTimerControl colorWithHexString:@"1E4F6A"].CGColor);
     CGContextStrokePath(context);
     
     //draws the tick marks
@@ -66,7 +66,7 @@
     CGContextAddLineToPoint(context, self.trianglePoint.x - (.5 * TRIANGLE_SIDE_LENGTH), self.trianglePoint.y + TRIANGLE_OPPOSITE_SIDE);
     CGContextClosePath(context);
 
-    CGContextSetFillColorWithColor(context, [ContainerView colorWithHexString:@"CDDEC6"].CGColor);
+    CGContextSetFillColorWithColor(context, [TTTimerControl colorWithHexString:@"CDDEC6"].CGColor);
     CGContextFillPath(context);
 }
 

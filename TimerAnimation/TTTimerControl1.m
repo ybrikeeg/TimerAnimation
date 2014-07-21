@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Kirby Gee - Stanford. All rights reserved.
 //
 
-#import "TTTimerControl.h"
+#import "TTTimerControl1.h"
 
-@interface TTTimerControl ()
+@interface TTTimerControl1 ()
 
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic) CGPoint touchLocation;
@@ -17,7 +17,7 @@
 
 @end
 
-@implementation TTTimerControl
+@implementation TTTimerControl1
 
 #define MAX_MINUTES 1440
 #define MIN_MINUTES 0
@@ -27,15 +27,15 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [TTTimerControl colorWithHexString:@"556270"];
+        self.backgroundColor = [TTTimerControl1 colorWithHexString:@"556270"];
         
         
         self.timeLabel = [[UILabel alloc] initWithFrame:self.bounds];
         self.timeLabel.text = @"hgfjhgfjhgf00:00:00";
         self.timeLabel.font = [UIFont fontWithName:@"Verdana" size:20.0f];
         self.timeLabel.textAlignment = NSTextAlignmentCenter;
-        self.timeLabel.textColor = [TTTimerControl colorWithHexString:@"4ECEC4"];
-        self.timeLabel.backgroundColor = [TTTimerControl colorWithHexString:@"556270"];
+        self.timeLabel.textColor = [TTTimerControl1 colorWithHexString:@"4ECEC4"];
+        self.timeLabel.backgroundColor = [TTTimerControl1 colorWithHexString:@"556270"];
         [self.timeLabel sizeToFit];
         self.timeLabel.text = @"0:00";
         

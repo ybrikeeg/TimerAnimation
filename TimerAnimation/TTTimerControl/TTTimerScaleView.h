@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ScaleView : UIView
+@interface TTTimerScaleView : UIView
 @property (nonatomic) CGPoint trianglePoint;
 
 @end

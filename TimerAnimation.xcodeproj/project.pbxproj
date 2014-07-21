@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		691F4ACB1979D1FF00FF0BB6 /* ScrollTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 691F4ACA1979D1FF00FF0BB6 /* ScrollTimerView.m */; };
-		691F4ACE1979D2AA00FF0BB6 /* ScaleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 691F4ACD1979D2AA00FF0BB6 /* ScaleView.m */; };
-		691F4AD11979D3A200FF0BB6 /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 691F4AD01979D3A200FF0BB6 /* ContainerView.m */; };
+		6936E7A3197DB5E6007DEB34 /* TTTimerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E79E197DB5E6007DEB34 /* TTTimerControl.m */; };
+		6936E7A4197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E7A0197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m */; };
+		6936E7A5197DB5E6007DEB34 /* TTTimerScaleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */; };
 		699CEA47197711AE0099BE6F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699CEA46197711AE0099BE6F /* Foundation.framework */; };
 		699CEA49197711AE0099BE6F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699CEA48197711AE0099BE6F /* CoreGraphics.framework */; };
 		699CEA4B197711AE0099BE6F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699CEA4A197711AE0099BE6F /* UIKit.framework */; };
@@ -26,7 +26,7 @@
 		699CEA7D197711CB0099BE6F /* Timer.m in Sources */ = {isa = PBXBuildFile; fileRef = 699CEA7C197711CB0099BE6F /* Timer.m */; };
 		699CEA80197711DF0099BE6F /* TimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 699CEA7F197711DF0099BE6F /* TimerViewController.m */; };
 		699CEA83197725420099BE6F /* CircularDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 699CEA82197725420099BE6F /* CircularDisplay.m */; };
-		69CFC74519786D8F002C6B3C /* TTTimerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFC74419786D8F002C6B3C /* TTTimerControl.m */; };
+		69CFC74519786D8F002C6B3C /* TTTimerControl1.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFC74419786D8F002C6B3C /* TTTimerControl1.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,12 +40,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		691F4AC91979D1FF00FF0BB6 /* ScrollTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollTimerView.h; sourceTree = "<group>"; };
-		691F4ACA1979D1FF00FF0BB6 /* ScrollTimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollTimerView.m; sourceTree = "<group>"; };
-		691F4ACC1979D2AA00FF0BB6 /* ScaleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleView.h; sourceTree = "<group>"; };
-		691F4ACD1979D2AA00FF0BB6 /* ScaleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleView.m; sourceTree = "<group>"; };
-		691F4ACF1979D3A200FF0BB6 /* ContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
-		691F4AD01979D3A200FF0BB6 /* ContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerView.m; sourceTree = "<group>"; };
+		6936E79C197DB5E6007DEB34 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		6936E79D197DB5E6007DEB34 /* TTTimerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerControl.h; sourceTree = "<group>"; };
+		6936E79E197DB5E6007DEB34 /* TTTimerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerControl.m; sourceTree = "<group>"; };
+		6936E79F197DB5E6007DEB34 /* TTTimerHorizontalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerHorizontalScrollView.h; sourceTree = "<group>"; };
+		6936E7A0197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerHorizontalScrollView.m; sourceTree = "<group>"; };
+		6936E7A1197DB5E6007DEB34 /* TTTimerScaleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerScaleView.h; sourceTree = "<group>"; };
+		6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerScaleView.m; sourceTree = "<group>"; };
 		699CEA43197711AE0099BE6F /* TimerAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimerAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		699CEA46197711AE0099BE6F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		699CEA48197711AE0099BE6F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -69,9 +70,8 @@
 		699CEA7F197711DF0099BE6F /* TimerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimerViewController.m; path = ../TimerViewController.m; sourceTree = "<group>"; };
 		699CEA81197725420099BE6F /* CircularDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircularDisplay.h; sourceTree = "<group>"; };
 		699CEA82197725420099BE6F /* CircularDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircularDisplay.m; sourceTree = "<group>"; };
-		69C6B326197D7F99009334CF /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		69CFC74319786D8F002C6B3C /* TTTimerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerControl.h; sourceTree = "<group>"; };
-		69CFC74419786D8F002C6B3C /* TTTimerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerControl.m; sourceTree = "<group>"; };
+		69CFC74319786D8F002C6B3C /* TTTimerControl1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerControl1.h; sourceTree = "<group>"; };
+		69CFC74419786D8F002C6B3C /* TTTimerControl1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerControl1.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,18 +98,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		691F4AD21979D3A900FF0BB6 /* Group3 */ = {
+		6936E79B197DB5E6007DEB34 /* TTTimerControl */ = {
 			isa = PBXGroup;
 			children = (
-				69C6B326197D7F99009334CF /* Constants.h */,
-				691F4ACF1979D3A200FF0BB6 /* ContainerView.h */,
-				691F4AD01979D3A200FF0BB6 /* ContainerView.m */,
-				691F4AC91979D1FF00FF0BB6 /* ScrollTimerView.h */,
-				691F4ACA1979D1FF00FF0BB6 /* ScrollTimerView.m */,
-				691F4ACC1979D2AA00FF0BB6 /* ScaleView.h */,
-				691F4ACD1979D2AA00FF0BB6 /* ScaleView.m */,
+				6936E79C197DB5E6007DEB34 /* Constants.h */,
+				6936E79D197DB5E6007DEB34 /* TTTimerControl.h */,
+				6936E79E197DB5E6007DEB34 /* TTTimerControl.m */,
+				6936E79F197DB5E6007DEB34 /* TTTimerHorizontalScrollView.h */,
+				6936E7A0197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m */,
+				6936E7A1197DB5E6007DEB34 /* TTTimerScaleView.h */,
+				6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */,
 			);
-			name = Group3;
+			path = TTTimerControl;
 			sourceTree = "<group>";
 		};
 		699CEA3A197711AE0099BE6F = {
@@ -150,9 +150,9 @@
 				699CEA58197711AE0099BE6F /* Main.storyboard */,
 				699CEA7E197711DF0099BE6F /* TimerViewController.h */,
 				699CEA7F197711DF0099BE6F /* TimerViewController.m */,
-				691F4AD21979D3A900FF0BB6 /* Group3 */,
-				69CFC74319786D8F002C6B3C /* TTTimerControl.h */,
-				69CFC74419786D8F002C6B3C /* TTTimerControl.m */,
+				6936E79B197DB5E6007DEB34 /* TTTimerControl */,
+				69CFC74319786D8F002C6B3C /* TTTimerControl1.h */,
+				69CFC74419786D8F002C6B3C /* TTTimerControl1.m */,
 				699CEA7B197711CB0099BE6F /* Timer.h */,
 				699CEA7C197711CB0099BE6F /* Timer.m */,
 				699CEA81197725420099BE6F /* CircularDisplay.h */,
@@ -290,13 +290,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				699CEA83197725420099BE6F /* CircularDisplay.m in Sources */,
-				691F4ACE1979D2AA00FF0BB6 /* ScaleView.m in Sources */,
-				691F4ACB1979D1FF00FF0BB6 /* ScrollTimerView.m in Sources */,
+				6936E7A3197DB5E6007DEB34 /* TTTimerControl.m in Sources */,
 				699CEA80197711DF0099BE6F /* TimerViewController.m in Sources */,
 				699CEA57197711AE0099BE6F /* AppDelegate.m in Sources */,
-				69CFC74519786D8F002C6B3C /* TTTimerControl.m in Sources */,
+				69CFC74519786D8F002C6B3C /* TTTimerControl1.m in Sources */,
+				6936E7A4197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m in Sources */,
+				6936E7A5197DB5E6007DEB34 /* TTTimerScaleView.m in Sources */,
 				699CEA53197711AE0099BE6F /* main.m in Sources */,
-				691F4AD11979D3A200FF0BB6 /* ContainerView.m in Sources */,
 				699CEA7D197711CB0099BE6F /* Timer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

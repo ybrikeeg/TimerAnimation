@@ -8,15 +8,15 @@
 
 #import "TimerViewController.h"
 #import "Timer.h"
+#import "TTTimerControl1.h"
+#import "TTTimerHorizontalScrollView.h"
 #import "TTTimerControl.h"
-#import "ScrollTimerView.h"
-#import "ContainerView.h"
 
 @interface TimerViewController ()
 @property (strong, nonatomic) Timer *timerView;
-@property (nonatomic, strong) TTTimerControl *timerControl;
-@property (nonatomic, strong) ContainerView *containerVelo;
-@property (nonatomic, strong) ContainerView *containerNoVelo;
+@property (nonatomic, strong) TTTimerControl1 *timerControl;
+@property (nonatomic, strong) TTTimerControl *containerVelo;
+@property (nonatomic, strong) TTTimerControl *containerNoVelo;
 @property(nonatomic, retain) NSDate *databaseDate;
 @end
 
@@ -42,14 +42,14 @@
     
     
     //slide horizontally
-    self.timerControl = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
+    self.timerControl = [[TTTimerControl1 alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     //[self.view addSubview:self.timerControl];
     
-    self.containerNoVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity:NO];
+    self.containerNoVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity:NO];
     [self.view addSubview:self.containerNoVelo];
     
     
-    self.containerVelo = [[ContainerView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity: YES];
+    self.containerVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity: YES];
     //[self.view addSubview:self.containerVelo];
     
     NSLog(@"views laoded");

@@ -10,5 +10,6 @@
 
 @interface TTTimerScaleView : UIView
 @property (nonatomic) CGPoint trianglePoint;
+@property (nonatomic, strong) UILabel *slidingTimeLabel;
 
 @end

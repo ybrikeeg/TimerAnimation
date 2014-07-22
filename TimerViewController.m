@@ -49,7 +49,7 @@
     [self.view addSubview:self.containerNoVelo];
     
     
-    self.containerVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity: YES];
+    //self.containerVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity: YES];
     //[self.view addSubview:self.containerVelo];
     
     NSLog(@"views laoded");

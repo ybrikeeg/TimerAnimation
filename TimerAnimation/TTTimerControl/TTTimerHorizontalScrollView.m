@@ -26,7 +26,7 @@
         self.timerLabel.font = [UIFont fontWithName:@"Verdana" size:24.0f];
         self.timerLabel.textColor = [TTTimerControl colorWithHexString:@"CDDEC6"];
         self.timerLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:self.timerLabel];
+        //[self addSubview:self.timerLabel];
     }
     return self;
 }

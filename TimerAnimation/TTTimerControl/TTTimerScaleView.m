@@ -124,12 +124,6 @@
     return [NSString stringWithFormat:@"%@%@", returnString, [self truncateDate:date]];
 }
 
-- (void)updateHourlyMarkerLabel:(int)index
-{
-    
-    UILabel *closestHour = [self.labelArray objectAtIndex:index];
-    closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - index*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
-}
 /*
  *  This updates all the variables that are used to determine the
  *  position of the hourly markers. Called everytime the time in
@@ -139,13 +133,11 @@
 {
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
-    NSLog(@"points for hour: %d \t %d", (int)(30.0f/self.pointsForHour), self.totalMinsInScale);
-   
+
     for (int i = 0; i < [self.labelArray count]; i++){
         UILabel *closestHour = [self.labelArray objectAtIndex:i];
-
         if (i % (int)pow(2, (int)(30.0f/self.pointsForHour)) == 0){
-            //[self updateHourlyMarkerLabel:i];
+            closestHour.hidden = NO;
             closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
 
         } else{
@@ -215,15 +207,12 @@
             [UIView setAnimationDuration:0.1f];
             [label setAlpha:1.0f];
             [UIView commitAnimations];
-        }
-        /* no need to fade labels out
-        else {
+        } else {
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:0.11f];
             [label setAlpha:0.0f];
             [UIView commitAnimations];
         }
-         */
     }
 }
 
@@ -236,11 +225,20 @@
 - (void)setTrianglePoint:(CGPoint)trianglePoint
 {
     [self makeTimeLabelsVisibile];
-    
-    if (trianglePoint.x < SCALE_INSET) {
-        //NSLog(@"left bound");
+
+    if (self.totalMinsInScale > DEFAULT_MINS_IN_SCALE){
         self.totalMinsInScale += self.dx;
         self.mins += self.dx;
+        [self setNeedsDisplay];
+        return;
+    }
+    //slider is left bound
+    if (trianglePoint.x <= SCALE_INSET) {
+        NSLog(@"left bound");
+        _trianglePoint.x = SCALE_INSET;
+        self.totalMinsInScale += self.dx;
+        self.mins += self.dx;
+        [self setNeedsDisplay];
         return;
     }
     

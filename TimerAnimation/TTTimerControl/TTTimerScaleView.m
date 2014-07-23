@@ -83,17 +83,10 @@
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
     
-    NSLog(@"minsFromPreviousHours: %d", self.minsFromPreviousHours);
-    NSLog(@"scaleWidth: %f", self.scaleWidth);
-    NSLog(@"totalMinsInScale: %d", self.totalMinsInScale);
-    NSLog(@"pointsForHour: %f", self.pointsForHour);
-    NSLog(@"pointsFromPreviousHour: %f", self.pointsFromPreviousHour);
-    
-    
     self.labelArray = [[NSMutableArray alloc] init];
     
-    for (int i = 0; i < self.totalMinsInScale; i++){
-        
+    
+    for (int i = 0; i < 24; i++){
         UILabel *closestHour = [[UILabel alloc] init];
         [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
         closestHour.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]];
@@ -106,9 +99,8 @@
         closestHour.alpha = 0.0;
         [self.labelArray addObject:closestHour];
     }
-    
-    NSLog(@"\n\n");
 }
+
 - (NSString *)timeToString:(NSDate *)d{
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"h:mm a"];//h:m a for am/pm
@@ -120,13 +112,10 @@
     self.scaleWidth = self.bounds.size.width - 2*SCALE_INSET;//number of points in scale
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
-    /*
-    NSLog(@"minsFromPreviousHours: %d", self.minsFromPreviousHours);
-    NSLog(@"scaleWidth: %f", self.scaleWidth);
-    NSLog(@"totalMinsInScale: %d", self.totalMinsInScale);
-    NSLog(@"pointsForHour: %f", self.pointsForHour);
-    NSLog(@"pointsFromPreviousHour: %f", self.pointsFromPreviousHour);
-    */
+
+    
+    NSLog(@"points for hour: %f", self.pointsForHour);
+    
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
@@ -135,8 +124,10 @@
         [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
         closestHour.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]];
         [closestHour sizeToFit];
+        //NSLog(@"Center dx: %f", (float)(closestHour.center.x - (float)(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour)));
         closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
     }
+    NSLog(@"array count: %d\n", [self.labelArray count]);
 }
 
 - (NSString *)dateFormatter: (NSDate *) date
@@ -159,9 +150,7 @@
         return;
     }
     _totalMinsInScale = totalMinsInScale;
-    
-    //NSLog(@"total mins: %d", _totalMinsInScale);
-    //NSLog(@"next time: %@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-_totalMinsInScale * 60]]);
+  
     self.slidingTimeLabel.text = [self timeToString:[[NSDate date] dateByAddingTimeInterval:-_totalMinsInScale * 60]];
     [self updateTimeMarkers];
 }
@@ -174,20 +163,41 @@
     if (self.minsFromPreviousHours != [[dateFormatter stringFromDate: [NSDate date]] intValue]){
         self.totalMinsInScale++;//scale will always contain totalHoursInScale * 60....duhh
         
-        NSLog(@"changing");
         self.minsFromPreviousHours = [[dateFormatter stringFromDate: [NSDate date]] intValue];
         [self updateTimeMarkers];
     }
 }
 
+- (void)updateTimeLabels
+{
+    for (int i = 0; i < [self.labelArray count]; i++){
+        UILabel *label = [self.labelArray objectAtIndex:i];
+        //if (label.frame.origin.x > _trianglePoint.x){
+        if (label.center.x > _trianglePoint.x){
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.1f];
+            [label setAlpha:1.0f];
+            [UIView commitAnimations];
+        } else {
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.11f];
+            [label setAlpha:0.0f];
+            [UIView commitAnimations];
+        }
+    }
+}
 - (void)setTrianglePoint:(CGPoint)trianglePoint
 {
+    [self updateTimeLabels];
+
+    
     if (trianglePoint.x < SCALE_INSET) {
         //NSLog(@"left bound");
         self.totalMinsInScale += self.dx;
         self.mins += self.dx;
         return;
     }
+    
     if (trianglePoint.x > self.bounds.size.width - SCALE_INSET) return;
     
     self.slidingTimeLabel.center = CGPointMake(_trianglePoint.x, self.slidingTimeLabel.bounds.size.height/2);
@@ -218,7 +228,6 @@
 }
 - (void)drawRect:(CGRect)rect
 {
-    
     //draws the scale
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -238,40 +247,7 @@
     [self.slidingTimeLabel sizeToFit];
     
     
-    for (int i = 0; i < [self.labelArray count]; i++){
-        UILabel *label = [self.labelArray objectAtIndex:i];
-            /*
-        //checks that the labels are properly placed
-        if (label.center.x > self.slidingTimeLabel.center.x){
-            [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:0.1f];
-            [label setAlpha:1.0f];
-            [UIView commitAnimations];
-        }else{
-            [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:0.1f];
-            [label setAlpha:0.0f];
-            [UIView commitAnimations];
-        }
-      */
-        //uncomment this when not testing
-        
-        //if (label.frame.origin.x > _trianglePoint.x){
-            if (label.center.x > _trianglePoint.x){
 
-            [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:0.1f];
-            [label setAlpha:1.0f];
-            [UIView commitAnimations];
-
-        } else {
-                [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:0.1f];
-                [label setAlpha:0.0f];
-                [UIView commitAnimations];
-        }
-        
-    }
     
     //draws the triangle
     CGContextMoveToPoint(context, self.trianglePoint.x, START_OFFSET);

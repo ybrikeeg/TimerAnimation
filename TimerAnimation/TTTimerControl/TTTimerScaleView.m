@@ -19,7 +19,7 @@
 @property (nonatomic) float scaleWidth;
 @property (nonatomic) float pointsForHour;
 @property (nonatomic) float pointsFromPreviousHour;
-
+@property (nonatomic) float pointsForVisibleHours;
 @end
 
 @implementation TTTimerScaleView
@@ -59,7 +59,6 @@
         [self addSubview:helper];
         
         
-        
         [self initializeTimeMarkers];
         
         
@@ -84,7 +83,7 @@
     self.scaleWidth = self.bounds.size.width - 2*SCALE_INSET;//number of points in scale
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
-    
+    self.pointsForVisibleHours = self.pointsForHour;
     self.labelArray = [[NSMutableArray alloc] init];
     
     
@@ -125,6 +124,12 @@
     return [NSString stringWithFormat:@"%@%@", returnString, [self truncateDate:date]];
 }
 
+- (void)updateHourlyMarkerLabel:(int)index
+{
+    
+    UILabel *closestHour = [self.labelArray objectAtIndex:index];
+    closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - index*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
+}
 /*
  *  This updates all the variables that are used to determine the
  *  position of the hourly markers. Called everytime the time in
@@ -132,15 +137,20 @@
  */
 - (void)updateTimeMarkers
 {
-    self.scaleWidth = self.bounds.size.width - 2*SCALE_INSET;//number of points in scale
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
-    
-    NSLog(@"points for hour: %f", self.pointsForHour);
-    
+    NSLog(@"points for hour: %d \t %d", (int)(30.0f/self.pointsForHour), self.totalMinsInScale);
+   
     for (int i = 0; i < [self.labelArray count]; i++){
         UILabel *closestHour = [self.labelArray objectAtIndex:i];
-        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
+
+        if (i % (int)pow(2, (int)(30.0f/self.pointsForHour)) == 0){
+            //[self updateHourlyMarkerLabel:i];
+            closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
+
+        } else{
+            closestHour.hidden = YES;
+        }
     }
 }
 
@@ -293,7 +303,6 @@
     
     CGContextSetFillColorWithColor(context, [TTTimerControl colorWithHexString:@"CDDEC6"].CGColor);
     CGContextFillPath(context);
-    
 }
 
 

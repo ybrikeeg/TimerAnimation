@@ -31,26 +31,33 @@
         // Initialization code
         self.backgroundColor = [TTTimerControl colorWithHexString:@"4DAAAB"];
         
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+        [dateFormatter setDateFormat:@"h:mm"];//h:m a for am/pm
+
         self.fixedTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0, 60, 20)];
-        self.fixedTimeLabel.text = [self timeToString:[NSDate date]];
+        self.fixedTimeLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        [dateFormatter setDateFormat:@"a"];//h:m a for am/pm
+        self.fixedTimeLabel.text = [self.fixedTimeLabel.text stringByAppendingString:[NSString stringWithFormat:@"%c", [self truncateAmPm: [dateFormatter stringFromDate:[NSDate date]]]]];
         self.fixedTimeLabel.textAlignment = NSTextAlignmentRight;
         self.fixedTimeLabel.font = [UIFont fontWithName:@"Verdana" size:16.0f];
         [self addSubview:self.fixedTimeLabel];
         [self.fixedTimeLabel sizeToFit];
         self.fixedTimeLabel.frame = CGRectMake(self.bounds.size.width - self.fixedTimeLabel.bounds.size.width, 0, self.fixedTimeLabel.bounds.size.width, self.fixedTimeLabel.bounds.size.height);
-        
+
         
         self.slidingTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0, 60, 20)];
-        self.slidingTimeLabel.text = [self timeToString:[NSDate date]];
-        self.slidingTimeLabel.textAlignment = NSTextAlignmentRight;
+        [dateFormatter setDateFormat:@"h:mm"];//h:m a for am/pm
+        self.slidingTimeLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        [dateFormatter setDateFormat:@"a"];//h:m a for am/pm
+        self.slidingTimeLabel.text = [self.slidingTimeLabel.text stringByAppendingString:[NSString stringWithFormat:@" %c", [self truncateAmPm: [dateFormatter stringFromDate:[NSDate date]]]]];
+        self.slidingTimeLabel.textAlignment = NSTextAlignmentCenter;
         self.slidingTimeLabel.font = [UIFont fontWithName:@"Verdana" size:16.0f];
         [self addSubview:self.slidingTimeLabel];
         [self.slidingTimeLabel sizeToFit];
         self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
-        [self.slidingTimeLabel sizeToFit];
         
         
-        self.trianglePoint = CGPointMake(self.bounds.size.width - SCALE_INSET, SCALE_INSET);
+        self.trianglePoint = CGPointMake(self.bounds.size.width, SCALE_INSET);
         
         
         UILabel *helper = [[UILabel alloc] initWithFrame:CGRectMake(0, self.bounds.size.height * .30f, self.bounds.size.width, self.bounds.size.height)];
@@ -90,13 +97,15 @@
         UILabel *closestHour = [[UILabel alloc] init];
         [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
         closestHour.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]];
+        [dateFormatter setDateFormat:@"a"];//h:m a for am/pm
+        closestHour.text = [closestHour.text stringByAppendingString:[NSString stringWithFormat:@"%c", [self truncateAmPm: [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]]]]];
         //closestHour.backgroundColor = [UIColor redColor];
         closestHour.textAlignment = NSTextAlignmentRight;
         closestHour.font = [UIFont fontWithName:@"Verdana" size:12.0f];
         [self addSubview:closestHour];
         [closestHour sizeToFit];
         closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
-        closestHour.alpha = 0.0;
+        closestHour.alpha = 1.0;
         [self.labelArray addObject:closestHour];
     }
 }
@@ -107,27 +116,23 @@
     return [dateFormatter stringFromDate: d];
 }
 
+- (char )truncateAmPm: (NSString *)time
+{
+    return [time characterAtIndex:0];
+}
+
 - (void)updateTimeMarkers
 {
     self.scaleWidth = self.bounds.size.width - 2*SCALE_INSET;//number of points in scale
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
-
-    
-    NSLog(@"points for hour: %f", self.pointsForHour);
-    
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
     for (int i = 0; i < [self.labelArray count]; i++){
         UILabel *closestHour = [self.labelArray objectAtIndex:i];
-        [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
-        closestHour.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]];
-        [closestHour sizeToFit];
-        //NSLog(@"Center dx: %f", (float)(closestHour.center.x - (float)(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour)));
         closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
     }
-    NSLog(@"array count: %d\n", [self.labelArray count]);
 }
 
 - (NSString *)dateFormatter: (NSDate *) date
@@ -140,7 +145,12 @@
 - (void)updateSlidingLabel:(int)mins
 {
     self.trianglePoint = CGPointMake((self.bounds.size.width - 2*SCALE_INSET) * (((float)self.totalMinsInScale - mins) / (float)self.totalMinsInScale) + SCALE_INSET, SCALE_INSET);
-    self.slidingTimeLabel.text = [self timeToString:[[NSDate date] dateByAddingTimeInterval:-mins * 60]];
+    NSLog(@"tri point: %@", NSStringFromCGPoint(_trianglePoint));
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"h:mm"];//h:m a for am/pm
+    self.slidingTimeLabel.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-mins * 60]];
+    [dateFormatter setDateFormat:@"a"];//h:m a for am/pm
+    self.slidingTimeLabel.text = [self.slidingTimeLabel.text stringByAppendingString:[NSString stringWithFormat:@"%c", [self truncateAmPm: [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-mins * 60]]]]];
 }
 
 - (void)setTotalMinsInScale:(int)totalMinsInScale
@@ -155,14 +165,22 @@
     [self updateTimeMarkers];
 }
 
--(void)updateTime:(NSTimer *)timer{
-    self.fixedTimeLabel.text = [self timeToString:[NSDate date]];
-
+-(void)updateTime:(NSTimer *)timer
+{
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
+    
     if (self.minsFromPreviousHours != [[dateFormatter stringFromDate: [NSDate date]] intValue]){
-        self.totalMinsInScale++;//scale will always contain totalHoursInScale * 60....duhh
+
+        [dateFormatter setDateFormat:@"h:mm"];//h:m a for am/pm
         
+        self.fixedTimeLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        [dateFormatter setDateFormat:@"a"];//h:m a for am/pm
+        self.fixedTimeLabel.text = [self.fixedTimeLabel.text stringByAppendingString:[NSString stringWithFormat:@"%c", [self truncateAmPm: [dateFormatter stringFromDate:[NSDate date]]]]];
+        [self.fixedTimeLabel sizeToFit];
+        
+        [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
+
         self.minsFromPreviousHours = [[dateFormatter stringFromDate: [NSDate date]] intValue];
         [self updateTimeMarkers];
     }
@@ -172,8 +190,7 @@
 {
     for (int i = 0; i < [self.labelArray count]; i++){
         UILabel *label = [self.labelArray objectAtIndex:i];
-        //if (label.frame.origin.x > _trianglePoint.x){
-        if (label.center.x > _trianglePoint.x){
+        if (label.frame.origin.x > SCALE_INSET){
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:0.1f];
             [label setAlpha:1.0f];
@@ -186,27 +203,40 @@
         }
     }
 }
+- (void)updateSlider{
+    if (self.slidingTimeLabel.frame.origin.x < 0){
+        self.slidingTimeLabel.frame = CGRectMake(0, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
+    } else if (self.slidingTimeLabel.frame.origin.x + self.slidingTimeLabel.bounds.size.width > self.bounds.size.width){
+        self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
+    }
+}
 - (void)setTrianglePoint:(CGPoint)trianglePoint
 {
     [self updateTimeLabels];
 
     
     if (trianglePoint.x < SCALE_INSET) {
-        //NSLog(@"left bound");
         self.totalMinsInScale += self.dx;
         self.mins += self.dx;
+        _trianglePoint = CGPointMake(SCALE_INSET, SCALE_INSET);
+        [self updateSlider];
+        NSLog(@"tri point1: %@", NSStringFromCGPoint(_trianglePoint));
+
         return;
     }
     
-    if (trianglePoint.x > self.bounds.size.width - SCALE_INSET) return;
-    
+    if (trianglePoint.x > self.bounds.size.width - SCALE_INSET){
+        _trianglePoint = CGPointMake(self.bounds.size.width, SCALE_INSET);
+        [self updateSlider];
+        NSLog(@"tri point2: %@", NSStringFromCGPoint(_trianglePoint));
+
+        return;
+    }
+    NSLog(@"sliding");
     self.slidingTimeLabel.center = CGPointMake(_trianglePoint.x, self.slidingTimeLabel.bounds.size.height/2);
     
-    if (self.slidingTimeLabel.frame.origin.x < 0){
-        self.slidingTimeLabel.frame = CGRectMake(0, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
-    } else if (self.slidingTimeLabel.frame.origin.x + self.slidingTimeLabel.bounds.size.width > self.bounds.size.width){
-        self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
-    }
+    [self updateSlider];
+
     
     _trianglePoint = CGPointMake(trianglePoint.x, SCALE_INSET);
 
@@ -216,16 +246,11 @@
     } else{
         self.fixedTimeLabel.alpha = 1.0f;
     }
-    
-    self.slidingTimeLabel.text = [self dateFormatter:[[NSDate date] dateByAddingTimeInterval:-self.mins * 60]];
+    NSLog(@"tri point3: %@", NSStringFromCGPoint(_trianglePoint));
 
     [self setNeedsDisplay];
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    NSLog(@"touch down");
-}
 - (void)drawRect:(CGRect)rect
 {
     //draws the scale
@@ -246,9 +271,7 @@
     
     [self.slidingTimeLabel sizeToFit];
     
-    
 
-    
     //draws the triangle
     CGContextMoveToPoint(context, self.trianglePoint.x, START_OFFSET);
     CGContextAddLineToPoint(context, self.trianglePoint.x, START_OFFSET + SCALE_SIDE_LENGTH);

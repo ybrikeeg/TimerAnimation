@@ -89,29 +89,22 @@
     int min = ((minutes % 60) / 15) * 15;
     return [NSString stringWithFormat:@"%d hrs %02d mins", hours, min];
 }
-- (NSString *)dateFormatter: (NSDate *) date{
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
-    [dateFormatter setDateFormat:@"h:mm a"];//h:m a for am/pm
-    return [dateFormatter stringFromDate:date];
 
-}
 - (void)setMinutes:(int)minutes
 {
     //bounds checking for minutes instance var
+    if (minutes > MAX_MINUTES){
+        minutes = MAX_MINUTES;
+    }
     if (minutes < MIN_MINUTES){
         minutes = MIN_MINUTES;
-    } else if (minutes > MAX_MINUTES){
-        minutes = MAX_MINUTES;
     }
     
     _minutes = minutes;
 
-    self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
+    //self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
     
-    //triangle moves based on minutes
-    self.scale.trianglePoint = CGPointMake((self.bounds.size.width - 2*SCALE_INSET) * (((float)MAX_MINUTES - _minutes) / (float)MAX_MINUTES) + SCALE_INSET, SCALE_INSET);
-    
-    self.scale.slidingTimeLabel.text = [self dateFormatter:[[NSDate date] dateByAddingTimeInterval:-_minutes * 60]];
+    [self.scale updateSlidingLabel:minutes];
 }
 
 - (void)moveScaleView:(int)dist
@@ -178,11 +171,11 @@
         } else if (!self.useVelocity){
             
             float dx = self.touchLocation.x - [touch locationInView:self].x;//difference in pts between last touch and current touch
-            self.minutes += dx;
+
+            self.scale.dx = dx;
+            self.minutes +=dx;
             //self.minutes = ((self.bounds.size.width - [touch locationInView:self].x) - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
             self.touchLocation = [touch locationInView:self];
-            
-            
             
         }
     }

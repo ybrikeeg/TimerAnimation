@@ -73,7 +73,7 @@
 
 - (void)initializeTimeMarkers
 {
-    self.totalMinsInScale = MAX_MINUTES;//scale will always contain totalHoursInScale * 60....duhh
+    self.totalMinsInScale = DEFAULT_MINS_IN_SCALE;//scale will always contain totalHoursInScale * 60....duhh
 
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
@@ -97,12 +97,12 @@
         UILabel *closestHour = [[UILabel alloc] init];
         [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
         closestHour.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]];
-        closestHour.backgroundColor = [UIColor redColor];
+        //closestHour.backgroundColor = [UIColor redColor];
         closestHour.textAlignment = NSTextAlignmentRight;
-        closestHour.font = [UIFont fontWithName:@"Verdana" size:16.0f];
+        closestHour.font = [UIFont fontWithName:@"Verdana" size:12.0f];
         [self addSubview:closestHour];
         [closestHour sizeToFit];
-        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, 20);
+        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
         closestHour.alpha = 0.0;
         [self.labelArray addObject:closestHour];
     }
@@ -120,12 +120,13 @@
     self.scaleWidth = self.bounds.size.width - 2*SCALE_INSET;//number of points in scale
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
-    
+    /*
     NSLog(@"minsFromPreviousHours: %d", self.minsFromPreviousHours);
     NSLog(@"scaleWidth: %f", self.scaleWidth);
     NSLog(@"totalMinsInScale: %d", self.totalMinsInScale);
     NSLog(@"pointsForHour: %f", self.pointsForHour);
     NSLog(@"pointsFromPreviousHour: %f", self.pointsFromPreviousHour);
+    */
     
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
@@ -134,9 +135,35 @@
         [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
         closestHour.text = [dateFormatter stringFromDate:[[NSDate date] dateByAddingTimeInterval:-i * 60 * 60]];
         [closestHour sizeToFit];
-        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, 20);
+        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
     }
+}
+
+- (NSString *)dateFormatter: (NSDate *) date
+{
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"h:mm a"];//h:m a for am/pm
+    return [dateFormatter stringFromDate:date];
+}
+
+- (void)updateSlidingLabel:(int)mins
+{
+    self.trianglePoint = CGPointMake((self.bounds.size.width - 2*SCALE_INSET) * (((float)self.totalMinsInScale - mins) / (float)self.totalMinsInScale) + SCALE_INSET, SCALE_INSET);
+    self.slidingTimeLabel.text = [self timeToString:[[NSDate date] dateByAddingTimeInterval:-mins * 60]];
+}
+
+- (void)setTotalMinsInScale:(int)totalMinsInScale
+{
+    if (totalMinsInScale > MAX_MINUTES){
+        _totalMinsInScale = MAX_MINUTES;
+        return;
+    }
+    _totalMinsInScale = totalMinsInScale;
     
+    //NSLog(@"total mins: %d", _totalMinsInScale);
+    //NSLog(@"next time: %@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-_totalMinsInScale * 60]]);
+    self.slidingTimeLabel.text = [self timeToString:[[NSDate date] dateByAddingTimeInterval:-_totalMinsInScale * 60]];
+    [self updateTimeMarkers];
 }
 
 -(void)updateTime:(NSTimer *)timer{
@@ -155,47 +182,54 @@
 
 - (void)setTrianglePoint:(CGPoint)trianglePoint
 {
-    if (trianglePoint.x < SCALE_INSET) return;
+    if (trianglePoint.x < SCALE_INSET) {
+        //NSLog(@"left bound");
+        self.totalMinsInScale += self.dx;
+        self.mins += self.dx;
+        return;
+    }
     if (trianglePoint.x > self.bounds.size.width - SCALE_INSET) return;
     
     self.slidingTimeLabel.center = CGPointMake(_trianglePoint.x, self.slidingTimeLabel.bounds.size.height/2);
     
     if (self.slidingTimeLabel.frame.origin.x < 0){
-        //NSLog(@"Whoa left");
         self.slidingTimeLabel.frame = CGRectMake(0, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
     } else if (self.slidingTimeLabel.frame.origin.x + self.slidingTimeLabel.bounds.size.width > self.bounds.size.width){
-        //NSLog(@"Whoa right");
         self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width, 0, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
-        
     }
     
     _trianglePoint = CGPointMake(trianglePoint.x, SCALE_INSET);
-    
-    
+
+    //fades the current time label out if the two labels intersect
     if (CGRectIntersectsRect(self.slidingTimeLabel.frame, self.fixedTimeLabel.frame)){
         self.fixedTimeLabel.alpha = 0.20f;
     } else{
         self.fixedTimeLabel.alpha = 1.0f;
-        
     }
+    
+    self.slidingTimeLabel.text = [self dateFormatter:[[NSDate date] dateByAddingTimeInterval:-self.mins * 60]];
+
     [self setNeedsDisplay];
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touch down");
+}
 - (void)drawRect:(CGRect)rect
 {
     
     //draws the scale
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    CGContextSetFillColorWithColor(context, [TTTimerControl colorWithHexString:@"FEAA3A"].CGColor);
+    CGContextFillRect(context, CGRectMake(_trianglePoint.x, START_OFFSET + TIME_BLOCK_OFFSET, self.bounds.size.width - SCALE_INSET - _trianglePoint.x, SCALE_SIDE_LENGTH - TIME_BLOCK_OFFSET));
+
+    //draws the scale
     CGContextMoveToPoint(context, SCALE_INSET, START_OFFSET);
     CGContextAddLineToPoint(context, SCALE_INSET, START_OFFSET + SCALE_SIDE_LENGTH);
     CGContextAddLineToPoint(context, self.bounds.size.width - SCALE_INSET, START_OFFSET + SCALE_SIDE_LENGTH);
     CGContextAddLineToPoint(context, self.bounds.size.width - SCALE_INSET, START_OFFSET);
-    //CGContextAddArc(context, SCALE_INSET + CORNER_RADIUS, SCALE_INSET + CORNER_RADIUS, CORNER_RADIUS, M_PI, -M_PI/2, 0);
-    //CGContextAddLineToPoint(context, SCALE_INSET + CORNER_RADIUS, SCALE_INSET);
-    //CGContextAddLineToPoint(context, self.bounds.size.width - SCALE_INSET - CORNER_RADIUS, SCALE_INSET);
-    //CGContextAddArc(context, self.bounds.size.width - SCALE_INSET - CORNER_RADIUS, SCALE_INSET + CORNER_RADIUS, CORNER_RADIUS, -M_PI/2, 0, 0);
-    //CGContextAddLineToPoint(context, self.bounds.size.width - SCALE_INSET, START_OFFSET);
     
     CGContextSetLineWidth(context, SCALE_LINE_WIDTH);
     CGContextSetStrokeColorWithColor(context, [TTTimerControl colorWithHexString:@"1E4F6A"].CGColor);
@@ -222,23 +256,19 @@
       */
         //uncomment this when not testing
         
-        if (label.frame.origin.x > self.slidingTimeLabel.frame.origin.x + self.slidingTimeLabel.frame.size.width){
-            
+        //if (label.frame.origin.x > _trianglePoint.x){
+            if (label.center.x > _trianglePoint.x){
+
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:0.1f];
             [label setAlpha:1.0f];
             [UIView commitAnimations];
 
         } else {
-            
-            //if (CGRectIntersectsRect(self.slidingTimeLabel.frame, label.frame)){
                 [UIView beginAnimations:nil context:NULL];
                 [UIView setAnimationDuration:0.1f];
                 [label setAlpha:0.0f];
                 [UIView commitAnimations];
-                
-            //}
-            
         }
         
     }
@@ -252,6 +282,7 @@
     
     context = UIGraphicsGetCurrentContext();
     
+    //draws the triangle
     CGContextMoveToPoint(context, self.trianglePoint.x, START_OFFSET + SCALE_SIDE_LENGTH - TRIANGLE_OPPOSITE_SIDE + SCALE_LINE_WIDTH/2);
     CGContextAddLineToPoint(context, self.trianglePoint.x + .5 * TRIANGLE_SIDE_LENGTH, START_OFFSET + SCALE_SIDE_LENGTH + SCALE_LINE_WIDTH/2);
     CGContextAddLineToPoint(context, self.trianglePoint.x - (.5 * TRIANGLE_SIDE_LENGTH), START_OFFSET + SCALE_SIDE_LENGTH + SCALE_LINE_WIDTH/2);

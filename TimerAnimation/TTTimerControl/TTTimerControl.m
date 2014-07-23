@@ -34,7 +34,7 @@
         self.scroll = [[TTTimerHorizontalScrollView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scroll];
         
-        self.scale = [[TTTimerScaleView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+        self.scale = [[TTTimerScaleView alloc] initWithFrame:CGRectMake(0, -80, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scale];
         
         [self sendSubviewToBack:self.scale];
@@ -146,14 +146,14 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!self.timerStarted){
-        [self moveScaleView:0];
+        //[self moveScaleView:0];
     }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!self.timerStarted){
-        [self moveScaleView:0];
+        //[self moveScaleView:0];
     }
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event

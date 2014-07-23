@@ -9,7 +9,7 @@
 #ifndef TimerAnimation_Constants_h
 #define TimerAnimation_Constants_h
 
-#define MAX_MINUTES 180
+#define MAX_MINUTES 120
 #define MIN_MINUTES 0
 #define MIN_MINUTE_DX 5
 #define MAX_MINUTE_DX 150

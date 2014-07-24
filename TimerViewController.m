@@ -42,10 +42,10 @@
     
     
     //slide horizontally
-    self.timerControl = [[TTTimerControl1 alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
+    //self.timerControl = [[TTTimerControl1 alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     //[self.view addSubview:self.timerControl];
     
-    self.containerNoVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80) usingVelocity:NO];
+    self.containerNoVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     [self.view addSubview:self.containerNoVelo];
     
     
@@ -56,14 +56,13 @@
     
 }
 
-
-
-
-
-- (IBAction)startTimer:(id)sender {
+- (IBAction)startTimer:(id)sender
+{
     [self.containerNoVelo startTiming];
 }
-- (IBAction)stopTimer:(id)sender {
+
+- (IBAction)stopTimer:(id)sender
+{
  
     [self.containerNoVelo stopTiming];
 }

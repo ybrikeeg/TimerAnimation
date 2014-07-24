@@ -15,43 +15,52 @@
 @property (nonatomic, strong) TTTimerScaleView *scale;
 @property (nonatomic, strong) TTTimerHorizontalScrollView *scroll;
 @property (nonatomic) CGPoint touchLocation;
-@property (nonatomic) BOOL useVelocity;
 @property (nonatomic, strong) NSTimer *mainTimer;
 @property (nonatomic) CGPoint firstTouch;
-
+@property (nonatomic) BOOL isEditingStartDate;
+@property (nonatomic, strong) UILabel *helper;
 @end
 
 @implementation TTTimerControl
 
 
-- (id)initWithFrame:(CGRect)frame usingVelocity:(BOOL)isVelo
+- (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.useVelocity = isVelo;
-        
         self.scroll = [[TTTimerHorizontalScrollView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scroll];
         
-        self.scale = [[TTTimerScaleView alloc] initWithFrame:CGRectMake(0, -80, self.bounds.size.width, self.bounds.size.height)];
+        self.scale = [[TTTimerScaleView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         [self addSubview:self.scale];
         
         [self sendSubviewToBack:self.scale];
         
         self.minutes = 0;
+        self.isEditingStartDate = NO;
+        
+        self.helper = [[UILabel alloc] initWithFrame:CGRectMake(0, self.bounds.size.height * 0.40f, self.bounds.size.width, self.bounds.size.height)];
+        self.helper.text = @"TAP TO EDIT START TIME";
+        self.helper.textAlignment = NSTextAlignmentCenter;
+        self.helper.font = [UIFont fontWithName:@"Verdana" size:16.0f];
+        [self addSubview:self.helper];
     }
     return self;
 }
 
 - (void)stopTiming
 {
-    int elapsedTime = (int)([self.startDate timeIntervalSinceNow] * -1);
-    NSLog(@"elapsed time in mins: %d", elapsedTime/60);
-    _minutes = elapsedTime/60;
-    self.timerStarted = NO;
-    [self.mainTimer invalidate];
-    self.scroll.timerLabel.text = @"0 hrs 0 mins";
+    if (self.startDate){
+        int elapsedTime = (int)([self.startDate timeIntervalSinceNow] * -1);
+        NSLog(@"elapsed time in mins: %d", elapsedTime/60);
+        _minutes = elapsedTime/60;
+        self.timerStarted = NO;
+        [self.mainTimer invalidate];
+        self.scroll.timerLabel.text = @"0 hrs 0 mins";
+        self.isEditingStartDate = NO;
+        self.helper.hidden = YES;
+    }
 }
 
 - (NSString *)convertDatetoString
@@ -76,17 +85,22 @@
     
     //round minutes to nearest multiple of 15
     int hours = self.minutes / 60;
-    int min = ((self.minutes % 60) / 15) * 15;
+    int min = ((self.minutes % 60) / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST;
     
     int tempMin = hours * 60 + min;
     self.minutes = tempMin;
     self.startDate = [self.startDate dateByAddingTimeInterval:-tempMin * 60];
+    self.helper.hidden = YES;
+    
+    if (self.isEditingStartDate){
+        [self moveScaleView:0];
+    }
 }
 
 - (NSString *)convertMinutesToHoursInStringFormat:(int)minutes
 {
     int hours = minutes / 60;
-    int min = ((minutes % 60) / 15) * 15;
+    int min = ((minutes % 60) / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST;
     return [NSString stringWithFormat:@"%d hrs %02d mins", hours, min];
 }
 
@@ -101,8 +115,8 @@
     }
     
     _minutes = minutes;
-
-    //self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
+    
+    self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
     
     [self.scale updateSlidingLabel:minutes];
 }
@@ -116,8 +130,9 @@
     [UIView setAnimationDuration:0.15];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
+    self.scroll.timerLabel.frame = CGRectMake(0, self.scale.bounds.origin.y - dist * 0.30, self.bounds.size.width, self.bounds.size.height);
+    
     self.scale.frame = CGRectMake(0, self.scale.bounds.origin.y - dist, self.bounds.size.width, self.bounds.size.height);
-    self.scroll.timerLabel.frame = CGRectMake(0, self.scroll.timerLabel.bounds.origin.y - dist * 0.90, self.bounds.size.width, self.bounds.size.height);
     
     [UIView commitAnimations];
 }
@@ -128,11 +143,13 @@
         UITouch *touch = [[event allTouches] anyObject];
         self.touchLocation = [touch locationInView:self];
         
-        if (!self.useVelocity){
-            //self.minutes = ([touch locationInView:self].x - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
+        if (self.isEditingStartDate){
+            
+        } else{
+            [self moveScaleView:80];
+            self.helper.hidden = YES;
         }
-        
-        [self moveScaleView:80];
+        self.isEditingStartDate = YES;
     }
 }
 
@@ -153,33 +170,14 @@
 {
     if (!self.timerStarted){
         UITouch *touch = [[event allTouches] anyObject];
-        //self.scale.trianglePoint = [touch locationInView:self];
         
-        if (self.useVelocity){
-            float dx = [touch locationInView:self].x - self.touchLocation.x;//difference in pts between last touch and current touch
-            
-            float velo = (fabsf(dx) / 2) * dx;//formula to account for velocity of the swipe **subject to change**
-            
-            //checks for lower and upper bounds for velo
-            dx = (velo > -MIN_MINUTE_DX && velo < MIN_MINUTE_DX) ? (velo > 0) ? MIN_MINUTE_DX : -MIN_MINUTE_DX : velo;//if velo is between -1 and 1, set it to -1 or 1, depending on sign
-            dx = (dx > MAX_MINUTE_DX) ? MAX_MINUTE_DX : dx;
-            dx = (dx < -MAX_MINUTE_DX) ? -MAX_MINUTE_DX : dx;
-            
-            self.minutes += dx;
-            //NSLog(@"Dx: %f", dx);
-            self.touchLocation = [touch locationInView:self];
-        } else if (!self.useVelocity){
-            
-            float dx = self.touchLocation.x - [touch locationInView:self].x;//difference in pts between last touch and current touch
-
-            self.scale.dx = dx;
-            self.minutes +=dx;
-            //self.minutes = ((self.bounds.size.width - [touch locationInView:self].x) - CORNER_OFFSET) / (self.bounds.size.width - 2*CORNER_OFFSET) * MAX_MINUTES;
-            self.touchLocation = [touch locationInView:self];
-            
-        }
+        float dx = self.touchLocation.x - [touch locationInView:self].x;//difference in pts between last touch and current touch
+        
+        self.scale.dx = dx;
+        self.minutes +=dx;
+        self.touchLocation = [touch locationInView:self];
+        
     }
-    
 }
 
 +(UIColor*)colorWithHexString:(NSString*)hex //found online at http://stackoverflow.com/questions/6207329/how-to-set-hex-color-code-for-background

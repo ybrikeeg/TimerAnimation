@@ -52,15 +52,14 @@
         self.trianglePoint = CGPointMake(self.bounds.size.width - SCALE_INSET, SCALE_INSET);
         
         
-        UILabel *helper = [[UILabel alloc] initWithFrame:CGRectMake(0, self.bounds.size.height * .30f, self.bounds.size.width, self.bounds.size.height)];
+        UILabel *helper = [[UILabel alloc] initWithFrame:CGRectMake(0, self.bounds.size.height * .40f, self.bounds.size.width, self.bounds.size.height)];
         helper.text = @"Scrub horiztonally to adjust start time";
         helper.textAlignment = NSTextAlignmentCenter;
-        helper.font = [UIFont fontWithName:@"Verdana" size:16.0f];
+        helper.font = [UIFont fontWithName:@"Verdana" size:14.0f];
         [self addSubview:helper];
         
         
         [self initializeTimeMarkers];
-        
         
         //makes sure that if the time changes while in the animation, everything adjusts accordingly
         [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTime:) userInfo:nil repeats:YES];
@@ -97,7 +96,7 @@
         closestHour.font = [UIFont fontWithName:@"Verdana" size:12.0f];
         [self addSubview:closestHour];
         [closestHour sizeToFit];
-        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
+        closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH + 8);
         closestHour.alpha = 0.0;
         [self.labelArray addObject:closestHour];
     }
@@ -138,7 +137,7 @@
         UILabel *closestHour = [self.labelArray objectAtIndex:i];
         if (i % (int)pow(2, (int)(30.0f/self.pointsForHour)) == 0){
             closestHour.hidden = NO;
-            closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - closestHour.bounds.size.height/2);
+            closestHour.center = CGPointMake(self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, closestHour.center.y);
 
         } else{
             closestHour.hidden = YES;
@@ -226,6 +225,7 @@
 {
     [self makeTimeLabelsVisibile];
 
+    //if there are more minutes in the scale than default, have the mark stick to the wall until defualt is reached
     if (self.totalMinsInScale > DEFAULT_MINS_IN_SCALE){
         self.totalMinsInScale += self.dx;
         self.mins += self.dx;
@@ -283,6 +283,24 @@
     CGContextSetStrokeColorWithColor(context, [TTTimerControl colorWithHexString:@"1E4F6A"].CGColor);
     CGContextStrokePath(context);
     
+    
+    for (int i = 0; i < [self.labelArray count]; i++){
+        if (i % (int)pow(2, (int)(30.0f/self.pointsForHour)) == 0){
+            
+            UILabel *label = [self.labelArray objectAtIndex:i];
+            if (label.frame.origin.x > SCALE_INSET){
+                context = UIGraphicsGetCurrentContext();
+                CGContextMoveToPoint(context, self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH);
+                CGContextAddLineToPoint(context, self.bounds.size.width - SCALE_INSET - self.pointsFromPreviousHour - i*self.pointsForHour, START_OFFSET + SCALE_SIDE_LENGTH - 10);
+                CGContextSetLineWidth(context, 2);
+                CGContextSetStrokeColorWithColor(context, [TTTimerControl colorWithHexString:@"1E4F6A"].CGColor);
+                CGContextStrokePath(context);
+                
+            } else {
+                break;
+            }
+        }
+    }
     
     //draws the triangle
     CGContextMoveToPoint(context, self.trianglePoint.x, START_OFFSET);

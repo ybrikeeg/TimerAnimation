@@ -16,7 +16,6 @@
 
 +(UIColor*)colorWithHexString:(NSString*)hex;
 
-- (id)initWithFrame:(CGRect)frame usingVelocity:(BOOL)isVelo;
 - (void)startTiming;
 - (void)stopTiming;
 

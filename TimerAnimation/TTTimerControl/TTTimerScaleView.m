@@ -146,7 +146,7 @@
  *  position of the hourly markers. Called everytime the time in
  *  scale changes
  */
-- (void)updateTimeMarkers
+- (void)updateHourlyMarkers
 {
     self.pointsForHour = (float)(self.scaleWidth / self.totalMinsInScale) * 60;//number of points each hour is
     self.pointsFromPreviousHour = (float)(self.minsFromPreviousHours / (float)60) * self.pointsForHour;
@@ -164,7 +164,8 @@
 }
 
 /*
- *  Updates the trianglePoint to match the users touch location. Also updates the sliding time label text
+ *  Updates the trianglePoint to match the users touch location. Also 
+ *  updates the sliding time label text. This is called in the TTTimerViewContainer
  */
 - (void)updateSlidingLabel:(int)mins
 {
@@ -188,7 +189,24 @@
     self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-_totalMinsInScale * 60]]];
     [self.slidingTimeLabel sizeToFit];
 
-    [self updateTimeMarkers];
+    [self updateHourlyMarkers];
+}
+
+/*
+ *  If the hour changes, this updates all the hourly markers to the 
+ *  correct hour
+ */
+- (void)increaseHourlyMarkers
+{
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+
+    for (int i = 0; i < [self.labelArray count]; i++){
+        UILabel *closestHour = [self.labelArray objectAtIndex:i];
+        [dateFormatter setDateFormat:@"h"];//h:m a for am/pm
+        NSDate *date = [[NSDate date] dateByAddingTimeInterval:-(i - 1) * 60 * 60];
+        closestHour.text = [NSString stringWithFormat:@"%@%@", [dateFormatter stringFromDate:date], [self truncateDate:date]];
+        [closestHour sizeToFit];
+    }
 }
 
 /*
@@ -207,7 +225,11 @@
         _totalMinsInScale++;//scale will always contain totalHoursInScale * 60....duhh
         
         self.minsFromPreviousHours = [[dateFormatter stringFromDate: [NSDate date]] intValue];
-        [self updateTimeMarkers];
+        
+        if (self.minsFromPreviousHours == 0){
+            [self increaseHourlyMarkers];
+        }
+        [self updateHourlyMarkers];
     }
 }
 
@@ -219,15 +241,19 @@
     for (int i = 0; i < [self.labelArray count]; i++){
         UILabel *label = [self.labelArray objectAtIndex:i];
         if (label.frame.origin.x > SCALE_INSET){
-            [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:0.1f];
-            [label setAlpha:1.0f];
-            [UIView commitAnimations];
+            if (label.alpha < 1.0f){
+                [UIView beginAnimations:nil context:NULL];
+                [UIView setAnimationDuration:0.1f];
+                [label setAlpha:1.0f];
+                [UIView commitAnimations];
+            }
         } else {
-            [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:0.11f];
-            [label setAlpha:0.0f];
-            [UIView commitAnimations];
+            if (label.alpha > 0.0f){
+                [UIView beginAnimations:nil context:NULL];
+                [UIView setAnimationDuration:0.11f];
+                [label setAlpha:0.0f];
+                [UIView commitAnimations];
+            }
         }
     }
 }
@@ -282,7 +308,6 @@
     
     //fades the current time label out if the two labels intersect
     if (CGRectIntersectsRect(self.slidingTimeLabel.frame, self.fixedTimeLabel.frame)){
-        NSLog(@"overlap");
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.2f];
         self.fixedTimeLabel.alpha = LABEL_OVERLAP_ALPHA;

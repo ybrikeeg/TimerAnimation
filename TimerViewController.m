@@ -36,7 +36,7 @@
     [super viewDidLoad];
     
     //slide vertically
-    self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, 100, self.view.bounds.size.width, self.view.bounds.size.height/2)];
+    //self.timerView = [[Timer alloc] initWithFrame:CGRectMake(0, 100, self.view.bounds.size.width, self.view.bounds.size.height/2)];
     //[self.view addSubview:self.timerView];
     
     
@@ -45,7 +45,7 @@
     //self.timerControl = [[TTTimerControl1 alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     //[self.view addSubview:self.timerControl];
     
-    self.containerNoVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
+    self.containerNoVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 160 - 98/2, self.view.bounds.size.width, 160)];
     [self.view addSubview:self.containerNoVelo];
     
     

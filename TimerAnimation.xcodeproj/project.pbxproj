@@ -120,7 +120,6 @@
 			children = (
 				699CEA4C197711AE0099BE6F /* TimerAnimation */,
 				699CEA6B197711AF0099BE6F /* TimerAnimationTests */,
-				699CEA45197711AE0099BE6F /* Frameworks */,
 				699CEA44197711AE0099BE6F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,6 +142,7 @@
 				699CEA65197711AF0099BE6F /* XCTest.framework */,
 			);
 			name = Frameworks;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		699CEA4C197711AE0099BE6F /* TimerAnimation */ = {
@@ -171,6 +171,7 @@
 		699CEA4D197711AE0099BE6F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				699CEA45197711AE0099BE6F /* Frameworks */,
 				699CEA4E197711AE0099BE6F /* TimerAnimation-Info.plist */,
 				699CEA4F197711AE0099BE6F /* InfoPlist.strings */,
 				699CEA52197711AE0099BE6F /* main.m */,

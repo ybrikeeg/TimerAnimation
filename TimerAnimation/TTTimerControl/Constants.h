@@ -27,7 +27,7 @@
 #define CORNER_RADIUS 15
 
 #define STROKE_WIDTH 2
-
+#define LABEL_OVERLAP_ALPHA 0.10f
 
 #define MINUTE_ROUNDING_TO_NEAREST 5
 #endif

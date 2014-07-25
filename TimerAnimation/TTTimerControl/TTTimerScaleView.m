@@ -55,7 +55,7 @@
     self.fixedTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0 + SCALE_Y_OFFSET, 60, 20)];
     self.fixedTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[NSDate date]]];
     self.fixedTimeLabel.textAlignment = NSTextAlignmentRight;
-    self.fixedTimeLabel.alpha = 0.20f;
+    self.fixedTimeLabel.alpha = LABEL_OVERLAP_ALPHA;
     [self addSubview:self.fixedTimeLabel];
     [self.fixedTimeLabel sizeToFit];
     self.fixedTimeLabel.frame = CGRectMake(self.bounds.size.width - self.fixedTimeLabel.bounds.size.width - SCALE_INSET, 0 + SCALE_Y_OFFSET, self.fixedTimeLabel.bounds.size.width, self.fixedTimeLabel.bounds.size.height);
@@ -282,9 +282,16 @@
     
     //fades the current time label out if the two labels intersect
     if (CGRectIntersectsRect(self.slidingTimeLabel.frame, self.fixedTimeLabel.frame)){
-        self.fixedTimeLabel.alpha = 0.20f;
+        NSLog(@"overlap");
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2f];
+        self.fixedTimeLabel.alpha = LABEL_OVERLAP_ALPHA;
+        [UIView commitAnimations];
     } else{
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2f];
         self.fixedTimeLabel.alpha = 1.0f;
+        [UIView commitAnimations];
     }
     
     [self setNeedsDisplay];

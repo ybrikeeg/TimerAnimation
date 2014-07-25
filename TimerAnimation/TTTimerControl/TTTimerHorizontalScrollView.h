@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface TTTimerHorizontalScrollView : UIView
+
 @property (nonatomic, strong) UILabel *timerLabel;
+
 @end

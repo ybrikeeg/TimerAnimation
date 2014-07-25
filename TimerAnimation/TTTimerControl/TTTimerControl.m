@@ -17,8 +17,6 @@
 @property (nonatomic) CGPoint touchLocation;
 @property (nonatomic, strong) NSTimer *mainTimer;
 @property (nonatomic) CGPoint firstTouch;
-@property (nonatomic, strong) UILabel *helper;
-
 @property (nonatomic, strong) UIView *borderView;
 @end
 
@@ -43,32 +41,23 @@
         self.borderView = [[UIView alloc] initWithFrame:CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2)];
         [self addSubview:self.borderView];
         
-        self.borderView.layer.cornerRadius = 15.0f;
+        self.borderView.layer.cornerRadius = CORNER_RADIUS;
         self.borderView.layer.borderColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0].CGColor;
-        self.borderView.layer.borderWidth = 3.0f;
-        /*
-         self.scale.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0, 0);
-
+        self.borderView.layer.borderWidth = 2.0f;
+        
+        
         UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToDoMethod)];
         [swipeGesture setDirection:UISwipeGestureRecognizerDirectionDown];
         [self.scale addGestureRecognizer: swipeGesture];
-         */
+        
         
         //self.scale.hidden = YES;
         [self sendSubviewToBack:self.scroll];
         
         [self sendSubviewToBack:self.scale];
         [self sendSubviewToBack:self.borderView];
-
+        
         self.minutes = 0;
-        
-        self.helper = [[UILabel alloc] initWithFrame:CGRectMake(0, self.bounds.size.height * 0.40f, self.bounds.size.width, self.bounds.size.height)];
-        self.helper.text = @"TAP TO EDIT START TIME";
-        self.helper.textColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-        self.helper.textAlignment = NSTextAlignmentCenter;
-        //self.helper.font = [UIFont fontWithName:@"Verdana" size:16.0f];
-        [self addSubview:self.helper];
-        
     }
     return self;
 }
@@ -76,8 +65,7 @@
 
 - (void)swipeToDoMethod
 {
-    NSLog(@"asdf");
-    //[self scaleTheScale:NO];
+    [self moveScaleView:-80];
 }
 
 - (void)stopTiming
@@ -89,7 +77,9 @@
         self.timerStarted = NO;
         [self.mainTimer invalidate];
         self.scroll.timerLabel.text = @"0 hrs 0 mins";
-        self.helper.hidden = YES;
+        self.startDate = nil;
+        [self.scale resetScale];
+        self.minutes = 0;
     }
 }
 
@@ -109,18 +99,20 @@
 
 - (void)startTiming
 {
-    self.timerStarted = YES;
-    self.startDate = [NSDate date];
-    self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
-    
-    //round minutes to nearest multiple of 15
-    int hours = self.minutes / 60;
-    int min = ((self.minutes % 60) / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST;
-    
-    int tempMin = hours * 60 + min;
-    self.minutes = tempMin;
-    self.startDate = [self.startDate dateByAddingTimeInterval:-tempMin * 60];
-    self.helper.hidden = YES;
+    if (!self.timerStarted){
+        self.timerStarted = YES;
+        self.startDate = [NSDate date];
+        self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+        
+        //round minutes to nearest multiple of 15
+        int hours = self.minutes / 60;
+        int min = ((self.minutes % 60) / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST;
+        
+        int tempMin = hours * 60 + min;
+        self.minutes = tempMin;
+        self.startDate = [self.startDate dateByAddingTimeInterval:-tempMin * 60];
+        [self moveScaleView:-80];
+    }
 }
 
 - (NSString *)convertMinutesToHoursInStringFormat:(int)minutes
@@ -147,21 +139,6 @@
     [self.scale updateSlidingLabel:minutes];
 }
 
-- (void)scaleTheScale:(BOOL)makeVisible
-{
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDuration:0.15];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    
-    if (makeVisible){
-        self.scale.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1, 1);
-    } else{
-        self.scale.transform = CGAffineTransformScale(CGAffineTransformIdentity, 0, 0);
-    }
-    [UIView commitAnimations];
-}
 - (void)moveScaleView:(int)dist
 {
     //move scale view up top
@@ -171,12 +148,12 @@
     [UIView setAnimationDuration:.2];
     [UIView setAnimationBeginsFromCurrentState:YES];
     
-    
-    //self.scroll.timerLabel.frame = CGRectMake(0, self.scale.bounds.origin.y - dist * 0.30, self.bounds.size.width, self.bounds.size.height);
-    
     self.scale.frame = CGRectMake(0, self.bounds.origin.y - dist, self.bounds.size.width, self.scale.frame.size.height);
-    self.borderView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
-    
+    if (dist >= 0){
+        self.borderView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
+    } else {
+        self.borderView.frame = CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2);
+    }
     [UIView commitAnimations];
 }
 
@@ -190,9 +167,7 @@
         self.touchLocation = [touch locationInView:self];
         
         if ([touch.view class] == [self.scroll class]){
-            //[self scaleTheScale:YES];
             [self moveScaleView:0];
-            self.helper.hidden = YES;
         }
     }
 }
@@ -207,7 +182,7 @@
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!self.timerStarted){
-        //[self moveScaleView:0];
+        //[self moveScaleView:-80];
     }
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
@@ -222,13 +197,6 @@
         self.touchLocation = [touch locationInView:self];
     }
 }
-
-
-- (void)drawRect:(CGRect)rect{
-
-
-}
-
 
 +(UIColor*)colorWithHexString:(NSString*)hex //found online at http://stackoverflow.com/questions/6207329/how-to-set-hex-color-code-for-background
 {

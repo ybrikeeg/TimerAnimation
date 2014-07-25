@@ -9,12 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface TTTimerScaleView : UIView
-@property (nonatomic) CGPoint trianglePoint;
-@property (nonatomic, strong) UILabel *slidingTimeLabel;
 
-@property (nonatomic) int mins;
 @property (nonatomic) float dx;
 
 - (void)updateSlidingLabel:(int)mins;
+- (void)resetScale;
 
 @end

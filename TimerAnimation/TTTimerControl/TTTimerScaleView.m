@@ -13,7 +13,10 @@
 @interface TTTimerScaleView ()
 @property (nonatomic, strong) UILabel *fixedTimeLabel;
 @property (nonatomic, strong) NSMutableArray *labelArray;
+@property (nonatomic, strong) UILabel *slidingTimeLabel;
+@property (nonatomic) CGPoint trianglePoint;
 
+@property (nonatomic) int mins;
 @property (nonatomic) int totalMinsInScale;
 @property (nonatomic) int minsFromPreviousHours;
 @property (nonatomic) float scaleWidth;
@@ -30,30 +33,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        //self.backgroundColor = [TTTimerControl colorWithHexString:@"4DAAAB"];
         self.backgroundColor = [UIColor clearColor];
  
-        
-        self.fixedTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0 + SCALE_Y_OFFSET, 60, 20)];
-        self.fixedTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[NSDate date]]];
-        self.fixedTimeLabel.textAlignment = NSTextAlignmentRight;
-        //self.fixedTimeLabel.font = [UIFont fontWithName:@"Verdana" size:16.0f];
-        [self addSubview:self.fixedTimeLabel];
-        [self.fixedTimeLabel sizeToFit];
-        self.fixedTimeLabel.frame = CGRectMake(self.bounds.size.width - self.fixedTimeLabel.bounds.size.width - SCALE_INSET, 0 + SCALE_Y_OFFSET, self.fixedTimeLabel.bounds.size.width, self.fixedTimeLabel.bounds.size.height);
-        
-        
-        self.slidingTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0 + SCALE_Y_OFFSET, 60, 20)];
-        self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[NSDate date]]];
-        self.slidingTimeLabel.textAlignment = NSTextAlignmentRight;
-        //self.slidingTimeLabel.font = [UIFont fontWithName:@"Verdana" size:16.0f];
-        [self addSubview:self.slidingTimeLabel];
-        [self.slidingTimeLabel sizeToFit];
-        self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width, 0 + SCALE_Y_OFFSET, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
-        
-        
         self.trianglePoint = CGPointMake(self.bounds.size.width - SCALE_INSET, SCALE_INSET + SCALE_Y_OFFSET);
         
+        [self createFixedAndSlidingLabels];
         [self initializeTimeMarkers];
         
         //makes sure that if the time changes while in the animation, everything adjusts accordingly
@@ -61,6 +45,45 @@
         
     }
     return self;
+}
+
+/*
+ *  Creates all the labels
+ */
+- (void)createFixedAndSlidingLabels
+{
+    self.fixedTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0 + SCALE_Y_OFFSET, 60, 20)];
+    self.fixedTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[NSDate date]]];
+    self.fixedTimeLabel.textAlignment = NSTextAlignmentRight;
+    self.fixedTimeLabel.alpha = 0.20f;
+    [self addSubview:self.fixedTimeLabel];
+    [self.fixedTimeLabel sizeToFit];
+    self.fixedTimeLabel.frame = CGRectMake(self.bounds.size.width - self.fixedTimeLabel.bounds.size.width - SCALE_INSET, 0 + SCALE_Y_OFFSET, self.fixedTimeLabel.bounds.size.width, self.fixedTimeLabel.bounds.size.height);
+    
+    
+    self.slidingTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 80, 0 + SCALE_Y_OFFSET, 60, 20)];
+    self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[NSDate date]]];
+    self.slidingTimeLabel.textAlignment = NSTextAlignmentRight;
+    [self addSubview:self.slidingTimeLabel];
+    [self.slidingTimeLabel sizeToFit];
+    self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width, 0 + SCALE_Y_OFFSET, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
+}
+
+/*
+ *  When a timer is stopped, this removes all the labels and then adds them back to the superview
+ */
+- (void)resetScale
+{
+    [self.fixedTimeLabel removeFromSuperview];
+    [self.slidingTimeLabel removeFromSuperview];
+    
+    [self createFixedAndSlidingLabels];
+    
+    for (UILabel *label in self.labelArray){
+        [label removeFromSuperview];
+    }
+    [self.labelArray removeAllObjects];
+    [self initializeTimeMarkers];
 }
 
 /*
@@ -228,7 +251,6 @@
     }
     //slider is left bound
     if (trianglePoint.x <= SCALE_INSET) {
-        NSLog(@"left bound");
         self.slidingTimeLabel.frame = CGRectMake(SCALE_INSET, 0 + SCALE_Y_OFFSET, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
 
         _trianglePoint.x = SCALE_INSET;
@@ -237,18 +259,17 @@
         [self setNeedsDisplay];
         return;
     }
-
+    
+    //the slider is right bound
     if (trianglePoint.x >= self.bounds.size.width - SCALE_INSET){
-        NSLog(@"right bounbd");
         //[self.slidingTimeLabel sizeToFit];
         self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width - SCALE_INSET, 0 + SCALE_Y_OFFSET, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
         _trianglePoint.x = self.bounds.size.width - SCALE_INSET;
         [self setNeedsDisplay];
-        //return;
-    
+        return;
     }
-    self.slidingTimeLabel.center = CGPointMake(_trianglePoint.x, self.slidingTimeLabel.bounds.size.height/2 + SCALE_Y_OFFSET);
     
+    self.slidingTimeLabel.center = CGPointMake(_trianglePoint.x, self.slidingTimeLabel.bounds.size.height/2 + SCALE_Y_OFFSET);
     
     //stops moving sliding label if about to hit side
     if (self.slidingTimeLabel.frame.origin.x < SCALE_INSET){
@@ -325,11 +346,5 @@
     
     CGContextSetFillColorWithColor(context, [TTTimerControl colorWithHexString:@"CDDEC6"].CGColor);
     CGContextFillPath(context);
-    
-    
-    //CGContextSetLineWidth(context, 1);
-    //CGContextStrokeEllipseInRect(context, CGRectMake(self.trianglePoint.x -7, self.bounds.size.height - 15, 14, 14));
 }
-
-
 @end

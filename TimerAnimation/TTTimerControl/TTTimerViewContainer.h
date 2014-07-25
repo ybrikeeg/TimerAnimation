@@ -8,16 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TTTimerControl : UIView
+@interface TTTimerViewContainer : UIView
 
 @property (nonatomic) int minutes;
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic) BOOL timerStarted;
 
-+(UIColor*)colorWithHexString:(NSString*)hex;
-
 - (void)startTiming;
 - (void)stopTiming;
-
 
 @end

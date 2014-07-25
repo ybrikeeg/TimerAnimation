@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Kirby Gee - Stanford. All rights reserved.
 //
 
-#import "TTTimerHorizontalScrollView.h"
+#import "TTTimerDurationView.h"
 #import "TTTimerScaleView.h"
-#import "TTTimerControl.h"
+#import "TTTimerViewContainer.h"
 #import "Constants.h"
 
-@interface TTTimerHorizontalScrollView ()
+@interface TTTimerDurationView ()
 @end
-@implementation TTTimerHorizontalScrollView
+@implementation TTTimerDurationView
 
 - (id)initWithFrame:(CGRect)frame
 {

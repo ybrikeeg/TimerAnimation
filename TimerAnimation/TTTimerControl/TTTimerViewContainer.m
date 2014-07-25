@@ -6,32 +6,30 @@
 //  Copyright (c) 2014 Kirby Gee - Stanford. All rights reserved.
 //
 
-#import "TTTimerControl.h"
+#import "TTTimerViewContainer.h"
 #import "TTTimerScaleView.h"
-#import "TTTimerHorizontalScrollView.h"
+#import "TTTimerDurationView.h"
 #import "Constants.h"
 
-@interface TTTimerControl ()
+@interface TTTimerViewContainer ()
 @property (nonatomic, strong) TTTimerScaleView *scale;
-@property (nonatomic, strong) TTTimerHorizontalScrollView *scroll;
+@property (nonatomic, strong) TTTimerDurationView *scroll;
 @property (nonatomic) CGPoint touchLocation;
 @property (nonatomic, strong) NSTimer *mainTimer;
 @property (nonatomic) CGPoint firstTouch;
 @property (nonatomic, strong) UIView *borderView;
 @end
 
-@implementation TTTimerControl
+@implementation TTTimerViewContainer
 
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        //self.backgroundColor = [UIColor greenColor];
-        //self.alpha = 0.75f;
         self.backgroundColor = [UIColor clearColor];
         
-        self.scroll = [[TTTimerHorizontalScrollView alloc] initWithFrame:CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2)];
+        self.scroll = [[TTTimerDurationView alloc] initWithFrame:CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2)];
         [self addSubview:self.scroll];
         
         self.scale = [[TTTimerScaleView alloc] initWithFrame:CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2)];
@@ -50,8 +48,6 @@
         [swipeGesture setDirection:UISwipeGestureRecognizerDirectionDown];
         [self.scale addGestureRecognizer: swipeGesture];
         
-        
-        //self.scale.hidden = YES;
         [self sendSubviewToBack:self.scroll];
         
         [self sendSubviewToBack:self.scale];
@@ -141,7 +137,7 @@
 
 - (void)moveScaleView:(int)dist
 {
-    //move scale view up top
+    //move scale view up top or back down
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView setAnimationDelegate:self];
@@ -172,19 +168,6 @@
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    if (!self.timerStarted){
-        //[self moveScaleView:-80];
-    }
-}
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    if (!self.timerStarted){
-        //[self moveScaleView:-80];
-    }
-}
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     if (!self.timerStarted){
@@ -196,38 +179,5 @@
         self.minutes +=dx;
         self.touchLocation = [touch locationInView:self];
     }
-}
-
-+(UIColor*)colorWithHexString:(NSString*)hex //found online at http://stackoverflow.com/questions/6207329/how-to-set-hex-color-code-for-background
-{
-    NSString *cString = [[hex stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
-    
-    // String should be 6 or 8 characters
-    if ([cString length] < 6) return [UIColor grayColor];
-    
-    // strip 0X if it appears
-    if ([cString hasPrefix:@"0X"]) cString = [cString substringFromIndex:2];
-    
-    if ([cString length] != 6) return  [UIColor grayColor];
-    
-    // Separate into r, g, b substrings
-    NSRange range;
-    range.location = 0;
-    range.length = 2;
-    NSString *rString = [cString substringWithRange:range];
-    
-    range.location = 2;
-    NSString *gString = [cString substringWithRange:range];
-    
-    range.location = 4;
-    NSString *bString = [cString substringWithRange:range];
-    
-    // Scan values
-    unsigned int r, g, b;
-    [[NSScanner scannerWithString:rString] scanHexInt:&r];
-    [[NSScanner scannerWithString:gString] scanHexInt:&g];
-    [[NSScanner scannerWithString:bString] scanHexInt:&b];
-    
-    return [UIColor colorWithRed:((float) r / 255.0f) green:((float) g / 255.0f) blue:((float) b / 255.0f) alpha:1.0f];
 }
 @end

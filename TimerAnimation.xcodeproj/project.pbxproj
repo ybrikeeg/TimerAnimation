@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6936E7A3197DB5E6007DEB34 /* TTTimerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E79E197DB5E6007DEB34 /* TTTimerControl.m */; };
-		6936E7A4197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E7A0197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m */; };
+		6936E7A3197DB5E6007DEB34 /* TTTimerViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E79E197DB5E6007DEB34 /* TTTimerViewContainer.m */; };
+		6936E7A4197DB5E6007DEB34 /* TTTimerDurationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E7A0197DB5E6007DEB34 /* TTTimerDurationView.m */; };
 		6936E7A5197DB5E6007DEB34 /* TTTimerScaleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */; };
 		695210BE197DBC3900477D11 /* TTFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 695210BD197DBC3900477D11 /* TTFormat.m */; };
 		699CEA47197711AE0099BE6F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699CEA46197711AE0099BE6F /* Foundation.framework */; };
@@ -42,10 +42,10 @@
 
 /* Begin PBXFileReference section */
 		6936E79C197DB5E6007DEB34 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		6936E79D197DB5E6007DEB34 /* TTTimerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerControl.h; sourceTree = "<group>"; };
-		6936E79E197DB5E6007DEB34 /* TTTimerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerControl.m; sourceTree = "<group>"; };
-		6936E79F197DB5E6007DEB34 /* TTTimerHorizontalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerHorizontalScrollView.h; sourceTree = "<group>"; };
-		6936E7A0197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerHorizontalScrollView.m; sourceTree = "<group>"; };
+		6936E79D197DB5E6007DEB34 /* TTTimerViewContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerViewContainer.h; sourceTree = "<group>"; };
+		6936E79E197DB5E6007DEB34 /* TTTimerViewContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerViewContainer.m; sourceTree = "<group>"; };
+		6936E79F197DB5E6007DEB34 /* TTTimerDurationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerDurationView.h; sourceTree = "<group>"; };
+		6936E7A0197DB5E6007DEB34 /* TTTimerDurationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerDurationView.m; sourceTree = "<group>"; };
 		6936E7A1197DB5E6007DEB34 /* TTTimerScaleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerScaleView.h; sourceTree = "<group>"; };
 		6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerScaleView.m; sourceTree = "<group>"; };
 		695210BC197DBC3900477D11 /* TTFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTFormat.h; sourceTree = "<group>"; };
@@ -105,10 +105,10 @@
 			isa = PBXGroup;
 			children = (
 				6936E79C197DB5E6007DEB34 /* Constants.h */,
-				6936E79D197DB5E6007DEB34 /* TTTimerControl.h */,
-				6936E79E197DB5E6007DEB34 /* TTTimerControl.m */,
-				6936E79F197DB5E6007DEB34 /* TTTimerHorizontalScrollView.h */,
-				6936E7A0197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m */,
+				6936E79D197DB5E6007DEB34 /* TTTimerViewContainer.h */,
+				6936E79E197DB5E6007DEB34 /* TTTimerViewContainer.m */,
+				6936E79F197DB5E6007DEB34 /* TTTimerDurationView.h */,
+				6936E7A0197DB5E6007DEB34 /* TTTimerDurationView.m */,
 				6936E7A1197DB5E6007DEB34 /* TTTimerScaleView.h */,
 				6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */,
 			);
@@ -296,11 +296,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				699CEA83197725420099BE6F /* CircularDisplay.m in Sources */,
-				6936E7A3197DB5E6007DEB34 /* TTTimerControl.m in Sources */,
+				6936E7A3197DB5E6007DEB34 /* TTTimerViewContainer.m in Sources */,
 				699CEA80197711DF0099BE6F /* TimerViewController.m in Sources */,
 				699CEA57197711AE0099BE6F /* AppDelegate.m in Sources */,
 				69CFC74519786D8F002C6B3C /* TTTimerControl1.m in Sources */,
-				6936E7A4197DB5E6007DEB34 /* TTTimerHorizontalScrollView.m in Sources */,
+				6936E7A4197DB5E6007DEB34 /* TTTimerDurationView.m in Sources */,
 				6936E7A5197DB5E6007DEB34 /* TTTimerScaleView.m in Sources */,
 				699CEA53197711AE0099BE6F /* main.m in Sources */,
 				695210BE197DBC3900477D11 /* TTFormat.m in Sources */,

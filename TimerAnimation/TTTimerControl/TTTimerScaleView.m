@@ -7,7 +7,7 @@
 //
 
 #import "TTTimerScaleView.h"
-#import "TTTimerControl.h"
+#import "TTTimerViewContainer.h"
 #import "Constants.h"
 
 @interface TTTimerScaleView ()
@@ -296,7 +296,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //draws filled rectangle
-    CGContextSetFillColorWithColor(context, [TTTimerControl colorWithHexString:@"59DFFF"].CGColor);
+    CGContextSetRGBFillColor(context, 89.0f/255.0f, 223.0f/255.0f, 255.0f/255.0f, 1.0f);
     CGContextFillRect(context, CGRectMake(_trianglePoint.x, START_OFFSET + TIME_BLOCK_OFFSET + SCALE_Y_OFFSET, self.bounds.size.width - SCALE_INSET - _trianglePoint.x, SCALE_SIDE_LENGTH - TIME_BLOCK_OFFSET));
     
     //draws the scale
@@ -344,7 +344,7 @@
     CGContextAddLineToPoint(context, _trianglePoint.x - (.5 * TRIANGLE_SIDE_LENGTH), START_OFFSET + SCALE_SIDE_LENGTH + SCALE_LINE_WIDTH/2 + SCALE_Y_OFFSET);
     CGContextClosePath(context);
     
-    CGContextSetFillColorWithColor(context, [TTTimerControl colorWithHexString:@"CDDEC6"].CGColor);
+    CGContextSetRGBFillColor(context, 232.0f/255.0f, 230.0f/255.0f, 231.0f/255.0f, 1.0f);
     CGContextFillPath(context);
 }
 @end

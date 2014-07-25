@@ -9,14 +9,14 @@
 #import "TimerViewController.h"
 #import "Timer.h"
 #import "TTTimerControl1.h"
-#import "TTTimerHorizontalScrollView.h"
-#import "TTTimerControl.h"
+#import "TTTimerDurationView.h"
+#import "TTTimerViewContainer.h"
 
 @interface TimerViewController ()
 @property (strong, nonatomic) Timer *timerView;
 @property (nonatomic, strong) TTTimerControl1 *timerControl;
-@property (nonatomic, strong) TTTimerControl *containerVelo;
-@property (nonatomic, strong) TTTimerControl *containerNoVelo;
+@property (nonatomic, strong) TTTimerViewContainer *containerVelo;
+@property (nonatomic, strong) TTTimerViewContainer *containerNoVelo;
 @property(nonatomic, retain) NSDate *databaseDate;
 @end
 
@@ -45,7 +45,7 @@
     //self.timerControl = [[TTTimerControl1 alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 80, self.view.bounds.size.width, 80)];
     //[self.view addSubview:self.timerControl];
     
-    self.containerNoVelo = [[TTTimerControl alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 160 - 98/2, self.view.bounds.size.width, 160)];
+    self.containerNoVelo = [[TTTimerViewContainer alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 160 - 98/2, self.view.bounds.size.width, 160)];
     [self.view addSubview:self.containerNoVelo];
     
     

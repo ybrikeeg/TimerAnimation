@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TTTimerHorizontalScrollView : UIView
+@interface TTTimerDurationView : UIView
 
 @property (nonatomic, strong) UILabel *timerLabel;
 

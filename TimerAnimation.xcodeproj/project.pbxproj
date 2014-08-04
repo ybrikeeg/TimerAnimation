@@ -28,6 +28,7 @@
 		699CEA80197711DF0099BE6F /* TimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 699CEA7F197711DF0099BE6F /* TimerViewController.m */; };
 		699CEA83197725420099BE6F /* CircularDisplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 699CEA82197725420099BE6F /* CircularDisplay.m */; };
 		69CFC74519786D8F002C6B3C /* TTTimerControl1.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CFC74419786D8F002C6B3C /* TTTimerControl1.m */; };
+		69E59B37198C4E11003A53AD /* TTCircleDragger.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E59B36198C4E11003A53AD /* TTCircleDragger.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		699CEA82197725420099BE6F /* CircularDisplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircularDisplay.m; sourceTree = "<group>"; };
 		69CFC74319786D8F002C6B3C /* TTTimerControl1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTimerControl1.h; sourceTree = "<group>"; };
 		69CFC74419786D8F002C6B3C /* TTTimerControl1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTimerControl1.m; sourceTree = "<group>"; };
+		69E59B35198C4E11003A53AD /* TTCircleDragger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCircleDragger.h; sourceTree = "<group>"; };
+		69E59B36198C4E11003A53AD /* TTCircleDragger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCircleDragger.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,8 @@
 				6936E7A0197DB5E6007DEB34 /* TTTimerDurationView.m */,
 				6936E7A1197DB5E6007DEB34 /* TTTimerScaleView.h */,
 				6936E7A2197DB5E6007DEB34 /* TTTimerScaleView.m */,
+				69E59B35198C4E11003A53AD /* TTCircleDragger.h */,
+				69E59B36198C4E11003A53AD /* TTCircleDragger.m */,
 			);
 			path = TTTimerControl;
 			sourceTree = "<group>";
@@ -295,6 +300,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69E59B37198C4E11003A53AD /* TTCircleDragger.m in Sources */,
 				699CEA83197725420099BE6F /* CircularDisplay.m in Sources */,
 				6936E7A3197DB5E6007DEB34 /* TTTimerViewContainer.m in Sources */,
 				699CEA80197711DF0099BE6F /* TimerViewController.m in Sources */,

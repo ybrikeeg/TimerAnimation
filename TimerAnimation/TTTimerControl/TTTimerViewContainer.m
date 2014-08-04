@@ -10,14 +10,17 @@
 #import "TTTimerScaleView.h"
 #import "TTTimerDurationView.h"
 #import "Constants.h"
+#import "TTCircleDragger.h"
 
 @interface TTTimerViewContainer ()
 @property (nonatomic, strong) TTTimerScaleView *scale;
 @property (nonatomic, strong) TTTimerDurationView *scroll;
+@property (nonatomic, strong) TTCircleDragger *circle;
 @property (nonatomic) CGPoint touchLocation;
 @property (nonatomic, strong) NSTimer *mainTimer;
 @property (nonatomic) CGPoint firstTouch;
 @property (nonatomic, strong) UIView *borderView;
+@property (nonatomic) BOOL isEditingStartTime;
 @end
 
 @implementation TTTimerViewContainer
@@ -44,7 +47,10 @@
         self.borderView.layer.borderWidth = 2.0f;
         
         
-        UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToDoMethod)];
+        self.circle = [[TTCircleDragger alloc] initWithFrame:CGRectMake(160, 70, 20, 20)];
+        [self addSubview:self.circle];
+        
+        UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideScaleDownGesture)];
         [swipeGesture setDirection:UISwipeGestureRecognizerDirectionDown];
         [self.scale addGestureRecognizer: swipeGesture];
         
@@ -54,12 +60,12 @@
         [self sendSubviewToBack:self.borderView];
         
         self.minutes = 0;
+        self.isEditingStartTime = NO;
     }
     return self;
 }
 
-
-- (void)swipeToDoMethod
+- (void)slideScaleDownGesture
 {
     [self moveScaleView:-80];
 }
@@ -85,6 +91,7 @@
     int hour = elapsedTime / 3600;
     int min = (elapsedTime % 3600) / 60;
     int sec = elapsedTime % 60;
+
     return [NSString stringWithFormat:@"%d:%02d:%02d", hour, min, sec];
 }
 
@@ -93,22 +100,27 @@
     self.scroll.timerLabel.text = [self convertDatetoString];
 }
 
-- (void)startTiming
+- (NSDate*)startTiming
 {
     if (!self.timerStarted){
         self.timerStarted = YES;
         self.startDate = [NSDate date];
         self.mainTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
         
+        if (self.isEditingStartTime){
+            [self moveScaleView:-80];
+        }
         //round minutes to nearest multiple of 15
         int hours = self.minutes / 60;
-        int min = ((self.minutes % 60) / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST;
+        int min = ((self.minutes % 60) / 15) * 15;
         
         int tempMin = hours * 60 + min;
-        self.minutes = tempMin;
+        _minutes = tempMin;
         self.startDate = [self.startDate dateByAddingTimeInterval:-tempMin * 60];
-        [self moveScaleView:-80];
+        return self.startDate;
     }
+    
+    return nil;
 }
 
 - (NSString *)convertMinutesToHoursInStringFormat:(int)minutes
@@ -133,6 +145,8 @@
     self.scroll.timerLabel.text = [self convertMinutesToHoursInStringFormat:minutes];
     
     [self.scale updateSlidingLabel:minutes];
+    
+    self.circle.center = CGPointMake(self.scale.trianglePoint.x, self.circle.center.y);
 }
 
 - (void)moveScaleView:(int)dist
@@ -145,10 +159,13 @@
     [UIView setAnimationBeginsFromCurrentState:YES];
     
     self.scale.frame = CGRectMake(0, self.bounds.origin.y - dist, self.bounds.size.width, self.scale.frame.size.height);
-    if (dist >= 0){
+    if (dist >= 0){//show the scale
         self.borderView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
-    } else {
+        self.circle.alpha = 1.0;
+    } else {//hide the scale
         self.borderView.frame = CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2);
+        self.circle.alpha = 0.0;
+
     }
     [UIView commitAnimations];
 }
@@ -158,11 +175,11 @@
     
     if (!self.timerStarted){
         UITouch *touch = [[event allTouches] anyObject];
-        NSLog(@"Touched view  %@",[touch.view class] );
-        
+        //NSLog(@"Touched view  %@",[touch.view class] );
         self.touchLocation = [touch locationInView:self];
         
         if ([touch.view class] == [self.scroll class]){
+            self.isEditingStartTime = YES;
             [self moveScaleView:0];
         }
     }
@@ -180,4 +197,5 @@
         self.touchLocation = [touch locationInView:self];
     }
 }
+
 @end

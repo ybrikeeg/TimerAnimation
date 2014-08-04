@@ -11,6 +11,7 @@
 @interface TTTimerScaleView : UIView
 
 @property (nonatomic) float dx;
+@property (nonatomic) CGPoint trianglePoint;
 
 - (void)updateSlidingLabel:(int)mins;
 - (void)resetScale;

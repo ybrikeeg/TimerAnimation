@@ -14,7 +14,6 @@
 @property (nonatomic, strong) UILabel *fixedTimeLabel;
 @property (nonatomic, strong) NSMutableArray *labelArray;
 @property (nonatomic, strong) UILabel *slidingTimeLabel;
-@property (nonatomic) CGPoint trianglePoint;
 
 @property (nonatomic) int mins;
 @property (nonatomic) int totalMinsInScale;
@@ -170,9 +169,16 @@
 - (void)updateSlidingLabel:(int)mins
 {
     self.trianglePoint = CGPointMake((self.bounds.size.width - 2*SCALE_INSET) * (((float)self.totalMinsInScale - mins) / (float)self.totalMinsInScale) + SCALE_INSET, SCALE_INSET + SCALE_Y_OFFSET);
-    self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-mins * 60]]];
-    [self.slidingTimeLabel sizeToFit];
+    //get number of mins
     
+    if (mins != 0){
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
+        [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
+        int minsInHour = [[dateFormatter stringFromDate: [NSDate date]] intValue] % MINUTE_ROUNDING_TO_NEAREST;
+        int min = (mins / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST + minsInHour;
+        self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-min * 60]]];
+        [self.slidingTimeLabel sizeToFit];
+    }
 }
 
 /*
@@ -186,9 +192,10 @@
         return;
     }
     _totalMinsInScale = totalMinsInScale;
-    self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-_totalMinsInScale * 60]]];
-    [self.slidingTimeLabel sizeToFit];
+    int min = (_totalMinsInScale / MINUTE_ROUNDING_TO_NEAREST) * MINUTE_ROUNDING_TO_NEAREST;
 
+    self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[[NSDate date] dateByAddingTimeInterval:-min * 60]]];
+    [self.slidingTimeLabel sizeToFit];
     [self updateHourlyMarkers];
 }
 
@@ -222,7 +229,7 @@
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat:@"mm"];//h:m a for am/pm
     if (self.minsFromPreviousHours != [[dateFormatter stringFromDate: [NSDate date]] intValue]){
-        _totalMinsInScale++;//scale will always contain totalHoursInScale * 60....duhh
+        //_totalMinsInScale++;//scale will always contain totalHoursInScale * 60....duhh
         
         self.minsFromPreviousHours = [[dateFormatter stringFromDate: [NSDate date]] intValue];
         
@@ -278,7 +285,6 @@
     //slider is left bound
     if (trianglePoint.x <= SCALE_INSET) {
         self.slidingTimeLabel.frame = CGRectMake(SCALE_INSET, 0 + SCALE_Y_OFFSET, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
-
         _trianglePoint.x = SCALE_INSET;
         self.totalMinsInScale += self.dx;
         self.mins += self.dx;
@@ -288,9 +294,9 @@
     
     //the slider is right bound
     if (trianglePoint.x >= self.bounds.size.width - SCALE_INSET){
-        //[self.slidingTimeLabel sizeToFit];
         self.slidingTimeLabel.frame = CGRectMake(self.bounds.size.width - self.slidingTimeLabel.bounds.size.width - SCALE_INSET, 0 + SCALE_Y_OFFSET, self.slidingTimeLabel.bounds.size.width, self.slidingTimeLabel.bounds.size.height);
         _trianglePoint.x = self.bounds.size.width - SCALE_INSET;
+        self.slidingTimeLabel.text = [NSString stringWithFormat:@"%@", [self timeToString:[NSDate date]]];
         [self setNeedsDisplay];
         return;
     }
@@ -371,6 +377,8 @@
     context = UIGraphicsGetCurrentContext();
     
     //draws the triangle
+    
+    /*
     CGContextMoveToPoint(context, _trianglePoint.x, START_OFFSET + SCALE_SIDE_LENGTH - TRIANGLE_OPPOSITE_SIDE + SCALE_LINE_WIDTH/2 + SCALE_Y_OFFSET);
     CGContextAddLineToPoint(context, _trianglePoint.x + .5 * TRIANGLE_SIDE_LENGTH, START_OFFSET + SCALE_SIDE_LENGTH + SCALE_LINE_WIDTH/2 + SCALE_Y_OFFSET);
     CGContextAddLineToPoint(context, _trianglePoint.x - (.5 * TRIANGLE_SIDE_LENGTH), START_OFFSET + SCALE_SIDE_LENGTH + SCALE_LINE_WIDTH/2 + SCALE_Y_OFFSET);
@@ -378,5 +386,6 @@
     
     CGContextSetRGBFillColor(context, 232.0f/255.0f, 230.0f/255.0f, 231.0f/255.0f, 1.0f);
     CGContextFillPath(context);
+     */
 }
 @end

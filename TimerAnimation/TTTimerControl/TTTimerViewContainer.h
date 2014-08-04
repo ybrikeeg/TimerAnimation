@@ -14,7 +14,7 @@
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic) BOOL timerStarted;
 
-- (void)startTiming;
+- (NSDate*)startTiming;
 - (void)stopTiming;
 
 @end

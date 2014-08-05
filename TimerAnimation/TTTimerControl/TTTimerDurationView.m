@@ -26,12 +26,18 @@
         self.timerLabel.textAlignment = NSTextAlignmentCenter;
         self.timerLabel.textColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
 
+        self.showBars = YES;
         [self addSubview:self.timerLabel];
         self.clipsToBounds = NO;
     }
     return self;
 }
 
+- (void)setShowBars:(BOOL)showBars
+{
+    _showBars = showBars;
+    [self setNeedsDisplay];
+}
 -(void)drawRect:(CGRect)rect
 {
     //draws the bottom part of the rounded rect
@@ -75,5 +81,18 @@
     CGContextClosePath(context);
     
     CGContextFillPath(context);
+    
+    
+    if (self.showBars){
+        int lineLength = 60;
+        int dec = 5;
+        
+        for (int i = 1; i < 4; i ++){
+            CGContextSetLineCap(context, kCGLineCapRound);
+            CGContextMoveToPoint(context, self.bounds.size.width/2 - (lineLength - dec*i)/2, dec*i + STROKE_WIDTH/2); //start at this point
+            CGContextAddLineToPoint(context, self.bounds.size.width/2 + (lineLength - dec*i)/2, dec*i + STROKE_WIDTH/2); //draw to this point
+            CGContextStrokePath(context);
+        }
+    }
 }
 @end

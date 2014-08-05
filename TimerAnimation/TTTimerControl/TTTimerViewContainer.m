@@ -152,27 +152,45 @@
 - (void)moveScaleView:(int)dist
 {
     //move scale view up top or back down
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDuration:.2];
-    [UIView setAnimationBeginsFromCurrentState:YES];
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    [UIView setAnimationDelegate:self];
+//    [UIView setAnimationDuration:.2];
+//    [UIView setAnimationBeginsFromCurrentState:YES];
+//    
+//    self.scale.frame = CGRectMake(0, self.bounds.origin.y - dist, self.bounds.size.width, self.scale.frame.size.height);
+//    if (dist >= 0){//show the scale
+//        self.borderView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
+//        self.circle.alpha = 1.0;
+//    } else {//hide the scale
+//        self.borderView.frame = CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2);
+//        self.circle.alpha = 0.0;
+//        self.scroll.showBars = YES;
+//    }
+//    [UIView commitAnimations];
     
-    self.scale.frame = CGRectMake(0, self.bounds.origin.y - dist, self.bounds.size.width, self.scale.frame.size.height);
-    if (dist >= 0){//show the scale
-        self.borderView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
-        self.circle.alpha = 1.0;
-    } else {//hide the scale
-        self.borderView.frame = CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2);
-        self.circle.alpha = 0.0;
+    
+    [UIView animateWithDuration:0.2f delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
+        //[UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        self.scale.frame = CGRectMake(0, self.bounds.origin.y - dist, self.bounds.size.width, self.scale.frame.size.height);
+        if (dist >= 0){//show the scale
+            self.borderView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
+            self.circle.alpha = 1.0;
+        } else {//hide the scale
+            self.borderView.frame = CGRectMake(0, 80, self.bounds.size.width, self.bounds.size.height/2);
+            self.circle.alpha = 0.0;
+        }
 
-    }
-    [UIView commitAnimations];
+    }completion:^(BOOL finished){
+        if (dist < 0){
+            self.scroll.showBars = YES;
+        }
+    }];
+     
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
     if (!self.timerStarted){
         UITouch *touch = [[event allTouches] anyObject];
         //NSLog(@"Touched view  %@",[touch.view class] );
@@ -181,6 +199,7 @@
         if ([touch.view class] == [self.scroll class]){
             self.isEditingStartTime = YES;
             [self moveScaleView:0];
+            self.scroll.showBars = NO;
         }
     }
 }

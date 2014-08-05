@@ -11,5 +11,6 @@
 @interface TTTimerDurationView : UIView
 
 @property (nonatomic, strong) UILabel *timerLabel;
+@property (nonatomic) BOOL showBars;
 
 @end

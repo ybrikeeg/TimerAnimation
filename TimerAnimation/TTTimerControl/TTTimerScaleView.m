@@ -232,7 +232,7 @@
         //_totalMinsInScale++;//scale will always contain totalHoursInScale * 60....duhh
         
         self.minsFromPreviousHours = [[dateFormatter stringFromDate: [NSDate date]] intValue];
-        
+        self.trianglePoint = CGPointMake(_trianglePoint.x - self.pointsForHour/60, _trianglePoint.y);
         if (self.minsFromPreviousHours == 0){
             [self increaseHourlyMarkers];
         }
